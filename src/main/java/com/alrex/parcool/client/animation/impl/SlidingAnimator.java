@@ -39,7 +39,7 @@ public class SlidingAnimator extends Animator {
 
 	@Override
 	public void rotate(PlayerEntity player, Parkourability parkourability, PlayerModelRotator rotator) {
-		float swimAmount = player.getSwimAmount(rotator.getPartialTick());
+		float swimAmount = player.getLeaningPitch(rotator.getPartialTick());
 		rotator
 				.startBasedCenter()
 				.rotateFrontward(-70 * bodyAngleFactor(swimAmount) - 90 * swimAmount)

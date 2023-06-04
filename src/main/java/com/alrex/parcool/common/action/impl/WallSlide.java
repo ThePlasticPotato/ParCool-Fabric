@@ -8,22 +8,18 @@ import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.WorldUtil;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
 ;
 
 public class WallSlide extends Action {
-	private Vec3 leanedWallDirection = null;
+	private Vec3d leanedWallDirection = null;
 
 	@Nullable
-	public Vec3 getLeanedWallDirection() {
+	public Vec3d getLeanedWallDirection() {
 		return leanedWallDirection;
 	}
 

@@ -1,13 +1,13 @@
 package com.alrex.parcool.client.animation;
 
 import com.alrex.parcool.utilities.VectorUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 public class PlayerModelRotator {
-	private final PoseStack stack;
+	private final MatrixStack stack;
 	private final PlayerEntity player;
 	private final float partial;
 	private double playerHeight = 1.8;
@@ -22,7 +22,7 @@ public class PlayerModelRotator {
 
 	private float angleFront = 0;
 
-	public PlayerModelRotator(PoseStack stack, PlayerEntity player, float partial) {
+	public PlayerModelRotator(MatrixStack stack, PlayerEntity player, float partial) {
 		this.stack = stack;
 		this.player = player;
 		this.partial = partial;
@@ -51,17 +51,17 @@ public class PlayerModelRotator {
 	}
 
 	public PlayerModelRotator rotateFrontward(float angleDegree) {
-		Vec3 lookVec = VectorUtil.fromYawDegree(player.yBodyRot).yRot((float) Math.PI / 2);
-		Vector3f vec = new Vector3f((float) lookVec.x, 0, (float) lookVec.z);
+		Vec3d lookVec = VectorUtil.fromYawDegree(player.bodyYaw).rotateY((float) Math.PI / 2);
+		Vec3f vec = new Vec3f((float) lookVec.x, 0, (float) lookVec.z);
 		angleFront += angleDegree;
-		stack.mulPose(vec.rotationDegrees(angleDegree));
+		stack.multiply(vec.getDegreesQuaternion(angleDegree));
 		return this;
 	}
 
 	public PlayerModelRotator rotateRightward(float angleDegree) {
-		Vec3 lookVec = VectorUtil.fromYawDegree(player.yBodyRot);
-		Vector3f vec = new Vector3f((float) lookVec.x, 0, (float) lookVec.z);
-		stack.mulPose(vec.rotationDegrees(angleDegree));
+		Vec3d lookVec = VectorUtil.fromYawDegree(player.bodyYaw);
+		Vec3f vec = new Vec3f((float) lookVec.x, 0, (float) lookVec.z);
+		stack.multiply(vec.getDegreesQuaternion(angleDegree));
 		return this;
 	}
 

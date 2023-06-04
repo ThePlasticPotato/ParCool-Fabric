@@ -3,19 +3,22 @@ package com.alrex.parcool.client.gui;
 import com.alrex.parcool.common.action.Action;
 import com.alrex.parcool.common.action.ActionList;
 import com.alrex.parcool.common.info.ActionInfo;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.BaseComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundEvents;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.CheckboxWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.BaseText;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.TranslatableText;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.BooleanSupplier;
@@ -47,25 +50,25 @@ public class ParCoolSettingScreen extends Screen {
 	private enum SettingMode {Actions, Configs, Limitations}
 
 	private SettingMode mode = SettingMode.Actions;
-	private final Checkbox[] configButtons = new Checkbox[configItemList.length];
+	private final CheckboxWidget[] configButtons = new CheckboxWidget[configItemList.length];
 	private final ActionConfigSet[] actionList = new ActionConfigSet[ActionList.ACTIONS.size()];
 	private final InfoSet[] infoList;
-	private final Checkbox[] actionButtons = new Checkbox[actionList.length];
+	private final CheckboxWidget[] actionButtons = new CheckboxWidget[actionList.length];
 	private final ModeSet[] modeMenuList = new ModeSet[]{
-			new ModeSet(new TranslatableComponent("parcool.gui.text.action"), SettingMode.Actions, 0, this),
-			new ModeSet(new TranslatableComponent("parcool.gui.text.config"), SettingMode.Configs, 1, this),
-			new ModeSet(new TranslatableComponent("parcool.gui.text.limitation"), SettingMode.Limitations, 2, this)
+			new ModeSet(new TranslatableText("parcool.gui.text.action"), SettingMode.Actions, 0, this),
+			new ModeSet(new TranslatableText("parcool.gui.text.config"), SettingMode.Configs, 1, this),
+			new ModeSet(new TranslatableText("parcool.gui.text.limitation"), SettingMode.Limitations, 2, this)
 	};
 	private int modeIndex;
 
-	public ParCoolSettingScreen(BaseComponent titleIn, ActionInfo info, ColorTheme theme) {
+	public ParCoolSettingScreen(BaseText titleIn, ActionInfo info, ColorTheme theme) {
 		super(titleIn);
 		for (int i = 0; i < actionList.length; i++) {
 			actionList[i] = new ActionConfigSet(ActionList.getByIndex(i), info);
-			actionButtons[i] = new Checkbox(0, 0, 0, Checkbox_Item_Height, new TextComponent(actionList[i].name), actionList[i].getter.getAsBoolean());
+			actionButtons[i] = new CheckboxWidget(0, 0, 0, Checkbox_Item_Height, new LiteralText(actionList[i].name), actionList[i].getter.getAsBoolean());
 		}
 		for (int i = 0; i < configItemList.length; i++) {
-			configButtons[i] = new Checkbox(0, 0, 0, Checkbox_Item_Height, new TranslatableComponent(configItemList[i].name), configItemList[i].getter.getAsBoolean());
+			configButtons[i] = new CheckboxWidget(0, 0, 0, Checkbox_Item_Height, new TranslatableText(configItemList[i].name), configItemList[i].getter.getAsBoolean());
 		}
 		infoList = new InfoSet[]{
 				new InfoSet(
@@ -90,34 +93,34 @@ public class ParCoolSettingScreen extends Screen {
 	private final BooleanSupplier individualPermissionReceived;
 
 	@Override
-	public void onClose() {
+	public void close() {
 		for (int i = 0; i < configItemList.length; i++) {
-			configItemList[i].setter.accept(configButtons[i].selected());
+			configItemList[i].setter.accept(configButtons[i].active);
 		}
 		for (int i = 0; i < actionList.length; i++) {
-			actionList[i].setter.accept(actionButtons[i].selected());
+			actionList[i].setter.accept(actionButtons[i].active);
 		}
-		super.onClose();
+		super.close();
 	}
 
 	@Override
-	public void resize(Minecraft p_231152_1_, int p_231152_2_, int p_231152_3_) {
+	public void resize(MinecraftClient p_231152_1_, int p_231152_2_, int p_231152_3_) {
 		super.resize(p_231152_1_, p_231152_2_, p_231152_3_);
 		mouseScrolled(0, 0, 0);
 	}
 
-	private static final BaseComponent MenuTitle = new TranslatableComponent("parcool.gui.title.setting");
+	private static final BaseText MenuTitle = new TranslatableText("parcool.gui.title.setting");
 
 	@Override
-	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
+	public void render(@NotNull MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
 		super.render(matrixStack, mouseX, mouseY, p_230430_4_);
 		renderBackground(matrixStack, 0);
-		int topBarHeight = font.lineHeight * 2;
-		int topBarItemWidth = (int) (1.6 * Arrays.stream(modeMenuList).map(it -> font.width(it.title)).max(Integer::compareTo).orElse(0));
+		int topBarHeight = textRenderer.fontHeight * 2;
+		int topBarItemWidth = (int) (1.6 * Arrays.stream(modeMenuList).map(it -> textRenderer.width(it.title)).max(Integer::compareTo).orElse(0));
 		int topBarOffsetX = width - topBarItemWidth * modeMenuList.length;
 		fillGradient(matrixStack, 0, 0, this.width, topBarHeight, color.getTopBar1(), color.getTopBar2());
-		drawString(
-				matrixStack, font, MenuTitle,
+		drawWithShadow(
+				matrixStack, textRenderer, (OrderedText) MenuTitle,
 				10,
 				topBarHeight / 4 + 1,
 				color.getText()
@@ -129,8 +132,8 @@ public class ParCoolSettingScreen extends Screen {
 			item.width = topBarItemWidth;
 			item.height = topBarHeight;
 			boolean selected = (item.mode == mode) || item.isMouseIn(mouseX, mouseY);
-			drawCenteredString(
-					matrixStack, font, item.title,
+			drawCenteredText(
+					matrixStack, textRenderer, item.title,
 					topBarOffsetX + i * topBarItemWidth + topBarItemWidth / 2,
 					topBarHeight / 4 + 1,
 					selected ? color.getText() : color.getSubText()
@@ -150,61 +153,62 @@ public class ParCoolSettingScreen extends Screen {
 		}
 	}
 
-	private static final BaseComponent Header_ActionName = new TranslatableComponent("parcool.gui.text.actionName");
-	private static final BaseComponent Header_ServerPermission = new TextComponent("G");
-	private static final BaseComponent Header_ServerPermissionText = new TranslatableComponent("parcool.gui.text.globalPermission");
-	private static final BaseComponent Header_IndividualPermission = new TextComponent("I");
-	private static final BaseComponent Header_IndividualPermissionText = new TranslatableComponent("parcool.gui.text.individualPermission");
-	private static final BaseComponent Permission_Permitted = new TextComponent("✓");
-	private static final BaseComponent Permission_Denied = new TextComponent("×");
-	private static final BaseComponent Permission_Not_Received = new TextComponent("§4Error:Permissions are not sent from a server.\nPlease check whether ParCool is installed or re-login to the server.§r");
+	private static final BaseText Header_ActionName = new TranslatableText("parcool.gui.text.actionName");
+	private static final BaseText Header_ServerPermission = new LiteralText("G");
+	private static final BaseText Header_ServerPermissionText = new TranslatableText("parcool.gui.text.globalPermission");
+	private static final BaseText Header_IndividualPermission = new LiteralText("I");
+	private static final BaseText Header_IndividualPermissionText = new TranslatableText("parcool.gui.text.individualPermission");
+	private static final BaseText Permission_Permitted = new LiteralText("✓");
+	private static final BaseText Permission_Denied = new LiteralText("×");
+	private static final BaseText Permission_Not_Received = new LiteralText("§4Error:Permissions are not sent from a server.\nPlease check whether ParCool is installed or re-login to the server.§r");
 
-	private void renderActions(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_, int offsetY) {
-		int offsetX = 40, headerHeight = (int) (font.lineHeight * 1.5f);
-		int headerOffsetY = offsetY + font.lineHeight * 2;
+	private void renderActions(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_, int offsetY) {
+		int offsetX = 40, headerHeight = (int) (textRenderer.fontHeight * 1.5f);
+		int headerOffsetY = offsetY + textRenderer.fontHeight * 2;
 		int contentOffsetY = headerOffsetY + headerHeight + 2;
-		int permissionColumnWidth = font.width(Permission_Permitted) * 5;
+		int permissionColumnWidth = textRenderer.getWidth(Permission_Permitted) * 5;
 		int nameColumnWidth = width - offsetX * 2 - permissionColumnWidth * 2;
-		int contentHeight = height - contentOffsetY - font.lineHeight * 2;
+		int contentHeight = height - contentOffsetY - textRenderer.fontHeight * 2;
 		viewableItemCount = contentHeight / Checkbox_Item_Height;
-		int headerTextY = headerOffsetY + headerHeight / 2 - font.lineHeight / 2 + 1;
-		drawString(matrixStack, font, Header_ActionName, offsetX + 5, headerTextY, color.getText());
-		drawCenteredString(matrixStack, font, Header_ServerPermission, offsetX + nameColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
-		drawCenteredString(matrixStack, font, Header_IndividualPermission, offsetX + nameColumnWidth + permissionColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
-		for (Checkbox actionButton : actionButtons) {
+		int headerTextY = headerOffsetY + headerHeight / 2 - textRenderer.fontHeight / 2 + 1;
+		drawWithShadow(matrixStack, textRenderer, (OrderedText) Header_ActionName, offsetX + 5, headerTextY, color.getText());
+		drawCenteredText(matrixStack, textRenderer, Header_ServerPermission, offsetX + nameColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
+		drawCenteredText(matrixStack, textRenderer, Header_IndividualPermission, offsetX + nameColumnWidth + permissionColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
+		for (CheckboxWidget actionButton : actionButtons) {
 			actionButton.setWidth(0);
 		}
 		for (int i = 0; i < viewableItemCount && i + topIndex < actionButtons.length; i++) {
-			Checkbox button = actionButtons[i + topIndex];
+			CheckboxWidget button = actionButtons[i + topIndex];
 			button.x = offsetX + 1;
 			button.y = contentOffsetY + Checkbox_Item_Height * i;
 			button.setWidth(nameColumnWidth - 5);
-			button.setHeight(20);
+			//todo fix set height you goon
+//			button.setHeight(20);
 			button.render(matrixStack, mouseX, mouseY, p_230430_4_);
 			fill(matrixStack, offsetX, button.y + button.getHeight(), width - offsetX, button.y + button.getHeight() + 1, color.getSubSeparator());
 			int rowY = contentOffsetY + Checkbox_Item_Height * i + Checkbox_Item_Height / 2;
 			boolean permitted = actionList[topIndex + i].serverWideLimitation.getAsBoolean();
-			drawCenteredString(
-					matrixStack, font,
+			drawCenteredText(
+					matrixStack, textRenderer,
 					permitted ? Permission_Permitted : Permission_Denied,
 					offsetX + nameColumnWidth + permissionColumnWidth / 2,
-					rowY - font.lineHeight / 2,
+					rowY - textRenderer.fontHeight / 2,
 					permitted ? 0x00AA00 : 0xAA0000
 			);
 			permitted = actionList[topIndex + i].individualLimitation.getAsBoolean();
-			drawCenteredString(
-					matrixStack, font,
+			drawCenteredText(
+					matrixStack, textRenderer,
 					permitted ? Permission_Permitted : Permission_Denied,
 					offsetX + nameColumnWidth + permissionColumnWidth + permissionColumnWidth / 2,
-					rowY - font.lineHeight / 2,
+					rowY - textRenderer.fontHeight / 2,
 					permitted ? 0x00AA00 : 0xAA0000
 			);
 		}
 		fillGradient(matrixStack, 0, offsetY, width, headerOffsetY, color.getHeader1(), color.getHeader2());
 		fillGradient(matrixStack, 0, contentOffsetY + contentHeight, width, height, color.getHeader1(), color.getHeader2());
-		drawCenteredString(matrixStack, font, modeMenuList[0].title, width / 2, offsetY + font.lineHeight / 2 + 2, color.getStrongText());
+		drawCenteredText(matrixStack, textRenderer, modeMenuList[0].title, width / 2, offsetY + textRenderer.fontHeight / 2 + 2, color.getStrongText());
 		if (topIndex + viewableItemCount < actionButtons.length)
-			drawCenteredString(matrixStack, font, new TextComponent("↓"), width / 2, height - font.lineHeight - font.lineHeight / 2, color.getStrongText());
+			drawCenteredText(matrixStack, textRenderer, new LiteralText("↓"), width / 2, height - textRenderer.fontHeight - textRenderer.fontHeight / 2, color.getStrongText());
 		//draw separators
 		fill(matrixStack, offsetX, contentOffsetY, width - offsetX, contentOffsetY - 1, color.getSeparator());
 		fill(matrixStack, offsetX, headerOffsetY, offsetX + 1, contentOffsetY + contentHeight, color.getSeparator());
@@ -217,9 +221,9 @@ public class ParCoolSettingScreen extends Screen {
 					&& (columnCenter - permissionColumnWidth / 2 < mouseX && mouseX < columnCenter + permissionColumnWidth / 2)
 			) {
 				if (serverPermissionReceived.getAsBoolean())
-					renderComponentTooltip(matrixStack, Collections.singletonList(Header_ServerPermissionText), mouseX, mouseY);
+					renderTooltip(matrixStack, Collections.singletonList(Header_ServerPermissionText), mouseX, mouseY);
 				else
-					renderComponentTooltip(
+					renderTooltip(
 							matrixStack,
 							Arrays.asList(Header_ServerPermissionText, Permission_Not_Received),
 							mouseX, mouseY);
@@ -230,9 +234,9 @@ public class ParCoolSettingScreen extends Screen {
 					&& (columnCenter - permissionColumnWidth / 2 < mouseX && mouseX < columnCenter + permissionColumnWidth / 2)
 			) {
 				if (individualPermissionReceived.getAsBoolean())
-					renderComponentTooltip(matrixStack, Collections.singletonList(Header_IndividualPermissionText), mouseX, mouseY);
+					renderTooltip(matrixStack, Collections.singletonList(Header_IndividualPermissionText), mouseX, mouseY);
 				else
-					renderComponentTooltip(
+					renderTooltip(
 							matrixStack,
 							Arrays.asList(Header_IndividualPermissionText, Permission_Not_Received),
 							mouseX, mouseY);
@@ -240,68 +244,66 @@ public class ParCoolSettingScreen extends Screen {
 		}
 	}
 
-	private void renderConfigs(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_, int offsetY) {
+	private void renderConfigs(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_, int offsetY) {
 		int offsetX = 40;
 		int contentWidth = width - offsetX * 2;
-		int contentHeight = height - offsetY - font.lineHeight * 4;
-		int contentOffsetY = offsetY + font.lineHeight * 2;
+		int contentHeight = height - offsetY - textRenderer.fontHeight * 4;
+		int contentOffsetY = offsetY + textRenderer.fontHeight * 2;
 		viewableItemCount = contentHeight / Checkbox_Item_Height;
-		for (Checkbox configButton : configButtons) {
+		for (CheckboxWidget configButton : configButtons) {
 			configButton.setWidth(0);
 		}
 		for (int i = 0; i < viewableItemCount && i + topIndex < configItemList.length; i++) {
-			Checkbox button = configButtons[i + topIndex];
+			CheckboxWidget button = configButtons[i + topIndex];
 			button.x = offsetX + 1;
-			button.y = offsetY + font.lineHeight * 2 + Checkbox_Item_Height * i;
+			button.y = offsetY + textRenderer.fontHeight * 2 + Checkbox_Item_Height * i;
 			button.setWidth(contentWidth);
-			button.setHeight(20);
 			button.render(matrixStack, mouseX, mouseY, p_230430_4_);
 			fill(matrixStack, offsetX, button.y + button.getHeight(), width - offsetX, button.y + button.getHeight() + 1, color.getSubSeparator());
 		}
 		fill(matrixStack, width - offsetX, contentOffsetY, width - offsetX - 1, contentOffsetY + contentHeight, color.getSeparator());
 		fill(matrixStack, offsetX, contentOffsetY, offsetX + 1, contentOffsetY + contentHeight, color.getSeparator());
-		fillGradient(matrixStack, 0, offsetY, width, offsetY + font.lineHeight * 2, color.getHeader1(), color.getHeader2());
-		fillGradient(matrixStack, 0, offsetY + contentHeight + font.lineHeight * 2, width, height, color.getHeader1(), color.getHeader2());
-		drawCenteredString(matrixStack, font, modeMenuList[1].title, width / 2, offsetY + font.lineHeight / 2 + 2, color.getStrongText());
+		fillGradient(matrixStack, 0, offsetY, width, offsetY + textRenderer.fontHeight * 2, color.getHeader1(), color.getHeader2());
+		fillGradient(matrixStack, 0, offsetY + contentHeight + textRenderer.fontHeight * 2, width, height, color.getHeader1(), color.getHeader2());
+		drawCenteredText(matrixStack, textRenderer, modeMenuList[1].title, width / 2, offsetY + textRenderer.fontHeight / 2 + 2, color.getStrongText());
 		if (topIndex + viewableItemCount < configButtons.length)
-			drawCenteredString(matrixStack, font, new TextComponent("↓"), width / 2, height - font.lineHeight - font.lineHeight / 2, color.getSubText());
+			drawCenteredText(matrixStack, textRenderer, new LiteralText("↓"), width / 2, height - textRenderer.fontHeight - textRenderer.fontHeight / 2, color.getSubText());
 	}
 
-	private void renderLimitations(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_, int offsetY) {
+	private void renderLimitations(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_, int offsetY) {
 		int offsetX = 40;
-		int contentHeight = height - offsetY - font.lineHeight * 4;
-		int contentOffsetY = offsetY + font.lineHeight * 2;
-		int itemHeight = font.lineHeight * 2;
-		int valueWidth = Arrays.stream(infoList).map(it -> font.width(it.value)).max(Integer::compareTo).orElse(0);
+		int contentHeight = height - offsetY - textRenderer.fontHeight * 4;
+		int contentOffsetY = offsetY + textRenderer.fontHeight * 2;
+		int itemHeight = textRenderer.fontHeight * 2;
+		int valueWidth = Arrays.stream(infoList).map(it -> textRenderer.getWidth(it.value)).max(Integer::compareTo).orElse(0);
 		for (int i = 0; i < infoList.length; i++) {
 			InfoSet item = infoList[i];
-			drawString(
-					matrixStack, font,
+			drawStringWithShadow(
+					matrixStack, textRenderer,
 					item.name,
 					offsetX + 5,
-					contentOffsetY + itemHeight * i + itemHeight / 2 - font.lineHeight / 2,
+					contentOffsetY + itemHeight * i + itemHeight / 2 - textRenderer.fontHeight / 2,
 					color.getText()
 			);
-			drawString(
-					matrixStack, font,
+			drawStringWithShadow(
+					matrixStack, textRenderer,
 					item.value,
 					width - offsetX - 5 - valueWidth,
-					contentOffsetY + itemHeight * i + itemHeight / 2 - font.lineHeight / 2,
+					contentOffsetY + itemHeight * i + itemHeight / 2 - textRenderer.fontHeight / 2,
 					color.getText()
 			);
 			fill(matrixStack, offsetX, contentOffsetY + itemHeight * (i + 1), width - offsetX, contentOffsetY + itemHeight * (i + 1) + 1, color.getSubSeparator());
 		}
 		fill(matrixStack, width - offsetX, contentOffsetY, width - offsetX - 1, contentOffsetY + contentHeight, color.getSeparator());
 		fill(matrixStack, offsetX, contentOffsetY, offsetX + 1, contentOffsetY + contentHeight, color.getSeparator());
-		fillGradient(matrixStack, 0, offsetY, width, offsetY + font.lineHeight * 2, color.getHeader1(), color.getHeader2());
-		fillGradient(matrixStack, 0, offsetY + contentHeight + font.lineHeight * 2, width, height, color.getHeader1(), color.getHeader2());
-		drawCenteredString(matrixStack, font, modeMenuList[2].title, width / 2, offsetY + font.lineHeight / 2 + 2, 0x8888FF);
+		fillGradient(matrixStack, 0, offsetY, width, offsetY + textRenderer.fontHeight * 2, color.getHeader1(), color.getHeader2());
+		fillGradient(matrixStack, 0, offsetY + contentHeight + textRenderer.fontHeight * 2, width, height, color.getHeader1(), color.getHeader2());
+		drawCenteredText(matrixStack, textRenderer, modeMenuList[2].title, width / 2, offsetY + textRenderer.fontHeight / 2 + 2, 0x8888FF);
 	}
 
 	@Override
-	public void renderBackground(@Nonnull PoseStack p_238651_1_, int p_238651_2_) {
+	public void renderBackground(@NotNull MatrixStack p_238651_1_, int p_238651_2_) {
 		fill(p_238651_1_, 0, 0, this.width, this.height, color.getBackground());
-		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent(this, p_238651_1_));
 	}
 
 	@Override
@@ -346,7 +348,7 @@ public class ParCoolSettingScreen extends Screen {
 	}
 
 	private static class ModeSet {
-		final BaseComponent title;
+		final BaseText title;
 		final SettingMode mode;
 		final ParCoolSettingScreen parent;
 		final int index;
@@ -355,7 +357,7 @@ public class ParCoolSettingScreen extends Screen {
 		int width = 0;
 		int height = 0;
 
-		ModeSet(BaseComponent title, SettingMode mode, int index, ParCoolSettingScreen parent) {
+		ModeSet(BaseText title, SettingMode mode, int index, ParCoolSettingScreen parent) {
 			this.title = title;
 			this.index = index;
 			this.mode = mode;
@@ -363,7 +365,7 @@ public class ParCoolSettingScreen extends Screen {
 		}
 
 		void set() {
-			Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
 			parent.topIndex = 0;
 			parent.mode = mode;
 			parent.modeIndex = index;
@@ -404,7 +406,7 @@ public class ParCoolSettingScreen extends Screen {
 		final BooleanSupplier individualLimitation;
 
 		ActionConfigSet(Class<? extends Action> action, ActionInfo info) {
-			name = new TranslatableComponent("parcool.action." + action.getSimpleName()).getString();
+			name = new TranslatableText("parcool.action." + action.getSimpleName()).getString();
 			ForgeConfigSpec.BooleanValue config = CONFIG_CLIENT.getPossibilityOf(action);
 			setter = config::set;
 			getter = config::get;
@@ -423,12 +425,12 @@ public class ParCoolSettingScreen extends Screen {
 		}
 		switch (mode) {
 			case Actions:
-				for (Checkbox button : actionButtons) {
+				for (CheckboxWidget button : actionButtons) {
 					button.mouseClicked(mouseX, mouseY, type);
 				}
 				break;
 			case Configs:
-				for (Checkbox button : configButtons) {
+				for (CheckboxWidget button : configButtons) {
 					button.mouseClicked(mouseX, mouseY, type);
 				}
 		}

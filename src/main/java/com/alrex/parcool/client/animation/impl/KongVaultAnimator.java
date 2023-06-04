@@ -1,5 +1,6 @@
 package com.alrex.parcool.client.animation.impl;
 
+import com.alrex.parcool.ParCool;
 import com.alrex.parcool.ParCoolConfig;
 import com.alrex.parcool.client.animation.Animator;
 import com.alrex.parcool.client.animation.PlayerModelRotator;
@@ -66,11 +67,13 @@ public class KongVaultAnimator extends Animator {
 	}
 
 	@Override
-	public void onCameraSetUp(EntityViewRenderEvent.CameraSetup event, PlayerEntity clientPlayer, Parkourability parkourability) {
-		if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() ||
+	public void onCameraSetUp(PlayerEntity clientPlayer, Parkourability parkourability) {
+		if (!MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
 				ParCoolConfig.CONFIG_CLIENT.disableCameraVault.get()) return;
-		float phase = (float) ((getTick() + event.getPartialTicks()) / MAX_TIME);
+		float phase = (float) ((getTick() + ParCool.PARTIALTICK) / MAX_TIME);
 		float factor = getFactor(phase);
-		event.setPitch(30 * factor + clientPlayer.getViewXRot((float) event.getPartialTicks()));
+		Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+		if (camera == null) return;
+		camera.setAnglesInternal(camera.getYaw(), 30 * factor + clientPlayer.getPitch((float) ParCool.PARTIALTICK));
 	}
 }

@@ -10,6 +10,7 @@ import com.alrex.parcool.utilities.MathUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 ;
 
@@ -21,13 +22,13 @@ public class WallSlideAnimator extends Animator {
 
 	@Override
 	public void animatePost(PlayerEntity player, Parkourability parkourability, PlayerModelTransformer transformer) {
-		Vec3 wall = parkourability.get(WallSlide.class).getLeanedWallDirection();
+		Vec3d wall = parkourability.get(WallSlide.class).getLeanedWallDirection();
 		if (wall == null) return;
-		Vec3 bodyVec = VectorUtil.fromYawDegree(player.yBodyRot);
-		Vec3 vec = new Vec3(bodyVec.x, 0, bodyVec.z).normalize();
+		Vec3d bodyVec = VectorUtil.fromYawDegree(player.bodyYaw);
+		Vec3d vec = new Vec3d(bodyVec.x, 0, bodyVec.z).normalize();
 
-		Vec3 dividedVec =
-				new Vec3(
+		Vec3d dividedVec =
+				new Vec3d(
 						vec.x * wall.x + vec.z * wall.z, 0,
 						-vec.x * wall.z + vec.z * wall.x
 				).normalize();

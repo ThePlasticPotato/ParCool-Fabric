@@ -1,5 +1,6 @@
 package com.alrex.parcool.client.animation.impl;
 
+import com.alrex.parcool.ParCool;
 import com.alrex.parcool.ParCoolConfig;
 import com.alrex.parcool.client.animation.Animator;
 import com.alrex.parcool.client.animation.PlayerModelRotator;
@@ -7,6 +8,7 @@ import com.alrex.parcool.client.animation.PlayerModelTransformer;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.EasingFunctions;
 import com.alrex.parcool.utilities.EasingFunctions;
+import com.alrex.parcool.utilities.IParCoolCamera;
 import com.alrex.parcool.utilities.MathUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -78,13 +80,18 @@ public class SpeedVaultAnimator extends Animator {
 	}
 
 	@Override
-	public void onCameraSetUp(EntityViewRenderEvent.CameraSetup event, PlayerEntity clientPlayer, Parkourability parkourability) {
-		if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() ||
+	public void onCameraSetUp(PlayerEntity clientPlayer, Parkourability parkourability) {
+		if (!MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
 				ParCoolConfig.CONFIG_CLIENT.disableCameraVault.get()) return;
-		float factor = getFactor((float) (getTick() + event.getPartialTicks()));
-		float phase = (float) ((getTick() + event.getPartialTicks()) / MAX_TIME);
+		float factor = getFactor((float) (getTick() + ParCool.PARTIALTICK));
+		float phase = (float) ((getTick() + ParCool.PARTIALTICK) / MAX_TIME);
 		float forwardFactor = (float) Math.sin(phase * 2 * Math.PI) + 0.5f;
-		event.setPitch(15 * forwardFactor);
+		Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+		if (camera == null) return;
+
+		camera.setAnglesInternal(camera.getYaw(), 15 * forwardFactor);
+
+		IParCoolCamera event = (IParCoolCamera) camera;
 		switch (type) {
 			case Right:
 				event.setRoll(-25 * factor);

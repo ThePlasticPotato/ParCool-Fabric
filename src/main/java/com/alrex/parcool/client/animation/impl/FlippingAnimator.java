@@ -176,9 +176,9 @@ public class FlippingAnimator extends Animator {
 		float phase = (float) ((getTick() + ParCool.PARTIALTICK) / getMaxAnimationTick());
 		float factor = angleFactor(phase);
 		if (direction == Flipping.FlippingDirection.Front) {
-			camera.setAnglesInternal(camera.getYaw(), (float)(clientPlayer.getRotationVec((float) ParCool.PARTIALTICK)).getX() + factor * 360 - ((phase > 0.5) ? 360 : 0));
+			camera.setAnglesInternal(camera.getYaw(), (float)(clientPlayer.getPitch((float) ParCool.PARTIALTICK)) + factor * 360 - ((phase > 0.5) ? 360 : 0));
 		} else {
-			camera.setAnglesInternal(camera.getYaw(),(float)(clientPlayer.getRotationVec((float) ParCool.PARTIALTICK)).getX() - factor * 360 + ((phase > 0.5) ? 360 : 0));
+			camera.setAnglesInternal(camera.getYaw(),(float)(clientPlayer.getPitch((float) ParCool.PARTIALTICK)) - factor * 360 + ((phase > 0.5) ? 360 : 0));
 		}
 	}
 }
