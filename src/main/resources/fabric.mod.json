@@ -17,8 +17,8 @@
 	"entrypoints": {
 		"main": [
 			{
-				"value": "com.alrex.ExampleMod",
-				"adapter": "kotlin"
+				"value": "com.alrex.ParCool",
+				"adapter": "java"
 			}
 		]
 	},
@@ -34,5 +34,12 @@
 	},
 	"suggests": {
 		"another-mod": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"parcool:stamina",
+			"parcool:parkourability",
+			"parcool:animation"
+		]
 	}
 }

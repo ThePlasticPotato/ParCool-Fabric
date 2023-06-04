@@ -8,7 +8,8 @@
   "client": [
     "client.LocalPlayerMixin",
     "client.PlayerModelMixin",
-    "client.PlayerRendererMixin"
+    "client.PlayerRendererMixin",
+    "client.MixinGameRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
