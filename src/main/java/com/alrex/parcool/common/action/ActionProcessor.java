@@ -150,7 +150,7 @@ public class ActionProcessor {
 			if (parkourability == null) return;
 			List<Action> actions = parkourability.getList();
 			for (Action action : actions) {
-				action.onRenderTick(callback, player, parkourability);
+				action.onRenderTick(player, parkourability);
 			}
 		}
 	}

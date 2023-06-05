@@ -11,54 +11,52 @@ import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.BufferUtil;
 import com.alrex.parcool.utilities.VectorUtil;
 import com.alrex.parcool.utilities.WorldUtil;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.TickEvent;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import java.nio.ByteBuffer;
 
-;
+;import static net.fabricmc.api.EnvType.CLIENT;
 
 public class HorizontalWallRun extends Action {
 	private int coolTime = 0;
 	private float bodyYaw = 0;
 	private static final int Max_Running_Tick = ParCoolConfig.CONFIG_CLIENT.wallRunContinuableTick.get();
 	private boolean wallIsRightward = false;
-	private Vec3 runningWallDirection = null;
+	private Vec3d runningWallDirection = null;
 
 	@Override
 	public void onClientTick(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		if (coolTime > 0) coolTime--;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onWorkingTickInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		Vec3 wallDirection = WorldUtil.getRunnableWall(player, player.getBbWidth());
+		Vec3d wallDirection = WorldUtil.getRunnableWall(player, player.getWidth());
 		if (wallDirection == null) return;
-		Vec3 targetVec = wallDirection.yRot((wallIsRightward ? 1 : -1) * (float) Math.PI / 2);
-		Vec3 lookVec = player.getLookAngle();
+		Vec3d targetVec = wallDirection.rotateY((wallIsRightward ? 1 : -1) * (float) Math.PI / 2);
+		Vec3d lookVec = player.getRotationVector();
 		double differenceAngle = Math.asin(
-				new Vec3(
+				new Vec3d(
 						lookVec.x * targetVec.x + lookVec.z * targetVec.z, 0,
 						-lookVec.x * targetVec.z + lookVec.z * targetVec.x
 				).normalize().z
 		);
-		bodyYaw = (float) VectorUtil.toYawDegree(targetVec.yRot((float) (differenceAngle / 10)));
+		bodyYaw = (float) VectorUtil.toYawDegree(targetVec.rotateY((float) (differenceAngle / 10)));
 		if (runningWallDirection == null) return;
-		Vec3 movement = player.getDeltaMovement();
+		Vec3d movement = player.getVelocity();
 		BlockPos leanedBlock = new BlockPos(
 				player.getX() + runningWallDirection.x,
-				player.getBoundingBox().minY + player.getBbHeight() * 0.5,
+				player.getBoundingBox().minY + player.getHeight() * 0.5,
 				player.getZ() + runningWallDirection.z
 		);
-		if (!player.level.isLoaded(leanedBlock)) return;
-		float slipperiness = player.level.getBlockState(leanedBlock).getFriction(player.level, leanedBlock, player);
+		if (!player.world.isChunkLoaded(leanedBlock)) return;
+		float slipperiness = player.world.getBlockState(leanedBlock).getBlock().getSlipperiness();
 		if (slipperiness <= 0.8) {
-			player.setDeltaMovement(
+			player.setVelocity(
 					movement.x,
 					movement.y * (slipperiness - 0.1) * ((double) getDoingTick()) / Max_Running_Tick,
 					movement.z
@@ -66,17 +64,17 @@ public class HorizontalWallRun extends Action {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
-		Vec3 wallDirection = WorldUtil.getRunnableWall(player, player.getBbWidth());
+		Vec3d wallDirection = WorldUtil.getRunnableWall(player, player.getWidth());
 		if (wallDirection == null) return false;
-		Vec3 wallVec = wallDirection.normalize();
-		Vec3 direction = VectorUtil.fromYawDegree(player.yBodyRot);
-		direction = new Vec3(direction.x, 0, direction.z).normalize();
+		Vec3d wallVec = wallDirection.normalize();
+		Vec3d direction = VectorUtil.fromYawDegree(player.bodyYaw);
+		direction = new Vec3d(direction.x, 0, direction.z).normalize();
 		//doing "wallDirection/direction" as complex number(x + z i) to calculate difference of player's direction to steps
-		Vec3 dividedVec =
-				new Vec3(
+		Vec3d dividedVec =
+				new Vec3d(
 						wallVec.x * direction.x + wallVec.z * direction.z, 0,
 						-wallVec.x * direction.z + wallVec.z * direction.x
 				).normalize();
@@ -90,8 +88,8 @@ public class HorizontalWallRun extends Action {
 		return (parkourability.getActionInfo().can(HorizontalWallRun.class)
 				&& !parkourability.get(WallJump.class).justJumped()
 				&& !parkourability.get(Crawl.class).isDoing()
-				&& KeyBindings.getKeyHorizontalWallRun().isDown()
-				&& Math.abs(player.getDeltaMovement().y) < 0.3
+				&& KeyBindings.getKeyHorizontalWallRun().isPressed()
+				&& Math.abs(player.getVelocity().y) < 0.3
 				&& coolTime == 0
 				&& !player.isOnGround()
 				&& parkourability.getAdditionalProperties().getNotLandingTick() > 5
@@ -102,17 +100,17 @@ public class HorizontalWallRun extends Action {
 		);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canContinue(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		Vec3 wallDirection = WorldUtil.getRunnableWall(player, player.getBbWidth());
+		Vec3d wallDirection = WorldUtil.getRunnableWall(player, player.getWidth());
 		if (wallDirection == null) return false;
 		return (getDoingTick() < Max_Running_Tick
 				&& !stamina.isExhausted()
 				&& parkourability.getActionInfo().can(HorizontalWallRun.class)
 				&& !parkourability.get(WallJump.class).justJumped()
 				&& !parkourability.get(Crawl.class).isDoing()
-				&& KeyBindings.getKeyHorizontalWallRun().isDown()
+				&& KeyBindings.getKeyHorizontalWallRun().isPressed()
 				&& !player.isOnGround()
 		);
 	}
@@ -125,7 +123,7 @@ public class HorizontalWallRun extends Action {
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		wallIsRightward = BufferUtil.getBoolean(startData);
-		runningWallDirection = new Vec3(startData.getDouble(), 0, startData.getDouble());
+		runningWallDirection = new Vec3d(startData.getDouble(), 0, startData.getDouble());
 		Animation animation = Animation.get(player);
 		if (animation != null) {
 			animation.setAnimator(new HorizontalWallRunAnimator(wallIsRightward));
@@ -135,18 +133,18 @@ public class HorizontalWallRun extends Action {
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		wallIsRightward = BufferUtil.getBoolean(startData);
-		runningWallDirection = new Vec3(startData.getDouble(), 0, startData.getDouble());
+		runningWallDirection = new Vec3d(startData.getDouble(), 0, startData.getDouble());
 		Animation animation = Animation.get(player);
 		if (animation != null) {
 			animation.setAnimator(new HorizontalWallRunAnimator(wallIsRightward));
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
-	public void onRenderTick(TickEvent.RenderTickEvent event, PlayerEntity player, Parkourability parkourability) {
+	public void onRenderTick(PlayerEntity player, Parkourability parkourability) {
 		if (isDoing()) {
-			player.setYRot(bodyYaw);
+			player.setYaw(bodyYaw);
 		}
 	}
 

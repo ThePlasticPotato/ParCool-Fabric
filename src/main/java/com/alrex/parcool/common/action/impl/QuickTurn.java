@@ -6,9 +6,9 @@ import com.alrex.parcool.common.action.StaminaConsumeTiming;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.VectorUtil;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import java.nio.ByteBuffer;
 
@@ -17,11 +17,11 @@ import java.nio.ByteBuffer;
 public class QuickTurn extends Action {
 	private static final int AnimationTickLength = 4;
 	private boolean turnRightward = false;
-	private Vec3 startAngle = null;
+	private Vec3d startAngle = null;
 
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
-		Vec3 angle = player.getLookAngle();
+		Vec3d angle = player.getRotationVector();
 		startInfo
 				.putDouble(angle.x)
 				.putDouble(angle.z);
@@ -40,7 +40,7 @@ public class QuickTurn extends Action {
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		turnRightward = !turnRightward;
-		startAngle = new Vec3(
+		startAngle = new Vec3d(
 				startData.getDouble(),
 				0,
 				startData.getDouble()
@@ -48,12 +48,12 @@ public class QuickTurn extends Action {
 	}
 
 	@Override
-	public void onRenderTick(TickEvent.RenderTickEvent event, PlayerEntity player, Parkourability parkourability) {
+	public void onRenderTick(PlayerEntity player, Parkourability parkourability) {
 		if (isDoing() && startAngle != null) {
-			float renderTick = getDoingTick() + event.renderTickTime;
+			float renderTick = getDoingTick() + MinecraftClient.getInstance().getTickDelta();
 			float animationPhase = renderTick / AnimationTickLength;
-			Vec3 rotatedAngle = startAngle.yRot((float) (Math.PI * animationPhase * (turnRightward ? -1 : 1)));
-			player.setYRot((float) VectorUtil.toYawDegree(rotatedAngle));
+			Vec3d rotatedAngle = startAngle.rotateY((float) (Math.PI * animationPhase * (turnRightward ? -1 : 1)));
+			player.setYaw((float) VectorUtil.toYawDegree(rotatedAngle));
 		}
 	}
 

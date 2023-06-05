@@ -16,10 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			{
-				"value": "com.alrex.ParCool",
-				"adapter": "java"
-			}
+			"com.alrex.parcool.ParCool"
+		],
+		"client": [
+			"com.alrex.parcool.ParCool.Client"
 		]
 	},
 	"mixins": [

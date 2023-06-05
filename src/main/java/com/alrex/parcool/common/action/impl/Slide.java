@@ -11,16 +11,15 @@ import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.EntityUtil;
 import com.alrex.parcool.utilities.VectorUtil;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import java.nio.ByteBuffer;
 
 ;
 
 public class Slide extends Action {
-	private Vec3 slidingVec = null;
+	private Vec3d slidingVec = null;
 
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
@@ -31,7 +30,7 @@ public class Slide extends Action {
 				&& !parkourability.get(Roll.class).isDoing()
 				&& !parkourability.get(Tap.class).isDoing()
 				&& parkourability.get(Crawl.class).isDoing()
-				&& !player.isInWaterOrBubble()
+				&& !player.isInsideWaterOrBubbleColumn()
 				&& (player.isOnGround() || !ParCoolConfig.CONFIG_CLIENT.disableCrawlInAir.get())
 				&& parkourability.get(FastRun.class).getDashTick(parkourability.getAdditionalProperties()) > 5
 		);
@@ -46,7 +45,7 @@ public class Slide extends Action {
 
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
-		slidingVec = player.getLookAngle().multiply(1, 0, 1).normalize();
+		slidingVec = player.getRotationVector().multiply(1, 0, 1).normalize();
 		Animation animation = Animation.get(player);
 		if (animation != null) {
 			animation.setAnimator(new SlidingAnimator());
@@ -64,7 +63,7 @@ public class Slide extends Action {
 	@Override
 	public void onWorkingTickInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		if (player.isOnGround() && slidingVec != null) {
-			Vec3 vec = slidingVec.scale(0.2);
+			Vec3d vec = slidingVec.multiply(0.2);
 			EntityUtil.addVelocity(player, vec);
 		}
 	}
@@ -86,9 +85,9 @@ public class Slide extends Action {
 	}
 
 	@Override
-	public void onRenderTick(TickEvent.RenderTickEvent event, PlayerEntity player, Parkourability parkourability) {
+	public void onRenderTick(PlayerEntity player, Parkourability parkourability) {
 		if (slidingVec == null || !isDoing()) return;
-		player.setYRot((float) VectorUtil.toYawDegree(slidingVec));
+		player.setYaw((float) VectorUtil.toYawDegree(slidingVec));
 	}
 
 	@Override

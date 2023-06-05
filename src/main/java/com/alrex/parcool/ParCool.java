@@ -22,6 +22,7 @@ import com.alrex.parcool.utilities.RenderTickHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.server.MinecraftServer;
@@ -65,7 +66,7 @@ public class ParCool implements ModInitializer {
 		setup();
 		doClientStuff();
 		//todo replace capabilities
-//		eventBus.register(Capabilities.class);
+		Capabilities.register();
 		Effects.registerAll();
 		ItemRegistry.registerAll();
 
@@ -92,8 +93,16 @@ public class ParCool implements ModInitializer {
 	}
 
 	private void doClientStuff() {
-		KeyBindings.register();
+
 	}
 
+
+	public class Client implements ClientModInitializer {
+
+		@Override
+		public void onInitializeClient() {
+			KeyBindings.register();
+		}
+	}
 
 }

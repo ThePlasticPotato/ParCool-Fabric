@@ -8,7 +8,8 @@ import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.EntityUtil;
-import net.minecraft.world.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+
 
 import java.nio.ByteBuffer;
 
@@ -31,7 +32,7 @@ public class JumpFromBar extends Action {
 
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
-		EntityUtil.addVelocity(player, player.getLookAngle().multiply(1, 0, 1).normalize().scale(player.getBbWidth() * 0.75));
+		EntityUtil.addVelocity(player, player.getRotationVector().multiply(1, 0, 1).normalize().multiply(player.getWidth() * 0.75));
 		Animation animation = Animation.get(player);
 		if (animation != null) animation.setAnimator(new JumpFromBarAnimator());
 	}

@@ -11,13 +11,14 @@ import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.BufferUtil;
 import com.alrex.parcool.utilities.WorldUtil;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
+
+import static net.fabricmc.api.EnvType.CLIENT;
 
 public class Vault extends Action {
 	public enum TypeSelectionMode {
@@ -50,19 +51,19 @@ public class Vault extends Action {
 
 	//only in client
 	private double stepHeight = 0;
-	private Vec3 stepDirection = null;
+	private Vec3d stepDirection = null;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
-		Vec3 lookVec = player.getLookAngle();
-		lookVec = new Vec3(lookVec.x, 0, lookVec.z).normalize();
-		Vec3 step = WorldUtil.getVaultableStep(player);
+		Vec3d lookVec = player.getRotationVector();
+		lookVec = new Vec3d(lookVec.x, 0, lookVec.z).normalize();
+		Vec3d step = WorldUtil.getVaultableStep(player);
 		if (step == null) return false;
 		step = step.normalize();
 		//doing "vec/stepDirection" as complex number(x + z i) to calculate difference of player's direction to steps
-		Vec3 dividedVec =
-				new Vec3(
+		Vec3d dividedVec =
+				new Vec3d(
 						lookVec.x * step.x + lookVec.z * step.z, 0,
 						-lookVec.x * step.z + lookVec.z * step.x
 				).normalize();
@@ -99,11 +100,11 @@ public class Vault extends Action {
 
 		return (parkourability.getActionInfo().can(Vault.class)
 				&& !stamina.isExhausted()
-				&& !(ParCoolConfig.CONFIG_CLIENT.vaultNeedKeyPressed.get() && !KeyBindings.getKeyVault().isDown())
+				&& !(ParCoolConfig.CONFIG_CLIENT.vaultNeedKeyPressed.get() && !KeyBindings.getKeyVault().isPressed())
 				&& parkourability.get(FastRun.class).canActWithRunning(player)
 				&& !stamina.isExhausted()
 				&& (player.isOnGround() || !ParCoolConfig.CONFIG_CLIENT.disableVaultInAir.get())
-				&& wallHeight > player.getBbHeight() * 0.44 /*about 0.8*/
+				&& wallHeight > player.getHeight() * 0.44 /*about 0.8*/
 		);
 	}
 
@@ -116,13 +117,13 @@ public class Vault extends Action {
 		return 2;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		AnimationType animationType = AnimationType.fromCode(startData.get());
 		SpeedVaultAnimator.Type speedVaultType = BufferUtil.getBoolean(startData) ?
 				SpeedVaultAnimator.Type.Right : SpeedVaultAnimator.Type.Left;
-		stepDirection = new Vec3(startData.getDouble(), startData.getDouble(), startData.getDouble());
+		stepDirection = new Vec3d(startData.getDouble(), startData.getDouble(), startData.getDouble());
 		stepHeight = startData.getDouble();
 		Animation animation = Animation.get(player);
 		if (animation != null && animationType != null) {
@@ -137,7 +138,7 @@ public class Vault extends Action {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		AnimationType animationType = AnimationType.fromCode(startData.get());
@@ -156,14 +157,14 @@ public class Vault extends Action {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onWorkingTickInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		if (stepDirection == null) return;
-		player.setDeltaMovement(
-				stepDirection.x() / 10,
-				((stepHeight + 0.02) / this.getVaultAnimateTime()) / (player.getBbHeight() / 1.8),
-				stepDirection.z() / 10
+		player.setVelocity(
+				stepDirection.x / 10,
+				((stepHeight + 0.02) / this.getVaultAnimateTime()) / (player.getHeight() / 1.8),
+				stepDirection.z / 10
 		);
 	}
 
@@ -172,14 +173,14 @@ public class Vault extends Action {
 		return StaminaConsumeTiming.OnStart;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onStopInLocalClient(PlayerEntity player) {
 		stepDirection = stepDirection.normalize();
-		player.setDeltaMovement(
-				stepDirection.x() * 0.45,
-				0.075 * (player.getBbHeight() / 1.8),
-				stepDirection.z() * 0.45
+		player.setVelocity(
+				stepDirection.x * 0.45,
+				0.075 * (player.getHeight() / 1.8),
+				stepDirection.z * 0.45
 		);
 	}
 }

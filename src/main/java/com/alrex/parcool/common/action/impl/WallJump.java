@@ -9,14 +9,15 @@ import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.WorldUtil;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
+
+import static net.fabricmc.api.EnvType.CLIENT;
 
 public class WallJump extends Action {
 
@@ -37,33 +38,33 @@ public class WallJump extends Action {
 	}
 
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Nullable
-	private Vec3 getJumpDirection(PlayerEntity player, Vec3 wall) {
+	private Vec3d getJumpDirection(PlayerEntity player, Vec3d wall) {
 		if (wall == null) return null;
 		wall = wall.normalize();
 
-		Vec3 lookVec = player.getLookAngle();
-		Vec3 vec = new Vec3(lookVec.x, 0, lookVec.z).normalize();
+		Vec3d lookVec = player.getRotationVector();
+		Vec3d vec = new Vec3d(lookVec.x, 0, lookVec.z).normalize();
 
-		if (wall.dot(vec) > 0.5) {//To Wall
+		if (wall.dotProduct(vec) > 0.5) {//To Wall
 			return null;
 		} else {/*back on Wall*/}
 
-		return vec.normalize().add(wall.scale(-0.7));
+		return vec.normalize().add(wall.multiply(-0.7));
 	}
 
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
-		Vec3 wallDirection = WorldUtil.getWall(player);
-		Vec3 jumpDirection = getJumpDirection(player, wallDirection);
+		Vec3d wallDirection = WorldUtil.getWall(player);
+		Vec3d jumpDirection = getJumpDirection(player, wallDirection);
 		if (jumpDirection == null) return false;
 		ClingToCliff cling = parkourability.get(ClingToCliff.class);
 
 		boolean value = (!stamina.isExhausted()
 				&& parkourability.getActionInfo().can(WallJump.class)
 				&& !player.isOnGround()
-				&& !player.isInWaterOrBubble()
+				&& !player.isInsideWaterOrBubbleColumn()
 				&& !player.isFallFlying()
 				&& !player.getAbilities().flying
 				&& parkourability.getAdditionalProperties().getNotCreativeFlyingTick() > 10
@@ -77,14 +78,14 @@ public class WallJump extends Action {
 		if (!value) return false;
 
 		//doing "wallDirection/jumpDirection" as complex number(x + z i) to calculate difference of player's direction to wall
-		Vec3 dividedVec =
-				new Vec3(
+		Vec3d dividedVec =
+				new Vec3d(
 						wallDirection.x * jumpDirection.x + wallDirection.z * jumpDirection.z, 0,
 						-wallDirection.x * jumpDirection.z + wallDirection.z * jumpDirection.x
 				).normalize();
-		Vec3 lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
-		Vec3 lookDividedVec =
-				new Vec3(
+		Vec3d lookVec = player.getRotationVector().multiply(1, 0, 1).normalize();
+		Vec3d lookDividedVec =
+				new Vec3d(
 						lookVec.x * wallDirection.x + lookVec.z * wallDirection.z, 0,
 						-lookVec.x * wallDirection.z + lookVec.z * wallDirection.x
 				).normalize();
@@ -119,28 +120,28 @@ public class WallJump extends Action {
 
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
-		double speedScale = player.getBbWidth() / 0.6;
-		Vec3 jumpDirection = new Vec3(startData.getDouble(), 0, startData.getDouble()).scale(speedScale);
-		Vec3 direction = new Vec3(jumpDirection.x, 1.512, jumpDirection.z).scale(0.3);
-		Vec3 wallDirection = new Vec3(startData.getDouble(), 0, startData.getDouble());
-		Vec3 motion = player.getDeltaMovement();
+		double speedScale = player.getWidth() / 0.6;
+		Vec3d jumpDirection = new Vec3d(startData.getDouble(), 0, startData.getDouble()).multiply(speedScale);
+		Vec3d direction = new Vec3d(jumpDirection.x, 1.512, jumpDirection.z).multiply(0.3);
+		Vec3d wallDirection = new Vec3d(startData.getDouble(), 0, startData.getDouble());
+		Vec3d motion = player.getVelocity();
 
 		BlockPos leanedBlock = new BlockPos(
 				player.getX() + wallDirection.x,
-				player.getBoundingBox().minY + player.getBbHeight() * 0.25,
+				player.getBoundingBox().minY + player.getHeight() * 0.25,
 				player.getZ() + wallDirection.z
 		);
-		float slipperiness = player.level.isLoaded(leanedBlock) ?
-				player.level.getBlockState(leanedBlock).getFriction(player.level, leanedBlock, player)
+		float slipperiness = player.world.isChunkLoaded(leanedBlock) ?
+				player.world.getBlockState(leanedBlock).getBlock().getSlipperiness()
 				: 0.6f;
 
 		double ySpeed;
 		if (slipperiness > 0.9) {// icy blocks
-			ySpeed = motion.y();
+			ySpeed = motion.y;
 		} else {
 			ySpeed = motion.y > direction.y ? motion.y + direction.y : direction.y;
 		}
-		player.setDeltaMovement(
+		player.setVelocity(
 				motion.x + direction.x,
 				ySpeed,
 				motion.z + direction.z

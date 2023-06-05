@@ -96,7 +96,7 @@ public abstract class Action {
 	}
 
 	@Environment(CLIENT)
-	public void onRenderTick(RenderTickStartCallback callback, PlayerEntity player, Parkourability parkourability) {
+	public void onRenderTick(PlayerEntity player, Parkourability parkourability) {
 	}
 
 	public void restoreSynchronizedState(ByteBuffer buffer) {
