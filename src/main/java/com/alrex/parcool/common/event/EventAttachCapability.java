@@ -8,20 +8,12 @@ import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.common.capability.impl.Stamina;
 import com.alrex.parcool.common.capability.storage.ParkourabilityStorage;
 import com.alrex.parcool.common.capability.storage.StaminaStorage;
-import com.alrex.parcool.extern.feathers.FeathersManager;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+
 
 ;
 
@@ -34,10 +26,10 @@ public class EventAttachCapability {
 		{
 			Parkourability instance = new Parkourability();
 			LazyOptional<Parkourability> optional = LazyOptional.of(() -> instance);
-			ICapabilityProvider provider = new ICapabilitySerializable<CompoundTag>() {
+			ComponentProvider provider = new ICapabilitySerializable<CompoundTag>() {
 				@Override
-				public CompoundTag serializeNBT() {
-					return (CompoundTag) new ParkourabilityStorage().writeTag(
+				public NbtCompound serializeNBT() {
+					return (NbtCompound) new ParkourabilityStorage().writeTag(
 							Capabilities.PARKOURABILITY_CAPABILITY,
 							instance,
 							null
@@ -79,7 +71,7 @@ public class EventAttachCapability {
 			if (player.isLocalPlayer()) {
 				instance.setMaxStamina(ParCoolConfig.CONFIG_CLIENT.staminaMax.get());
 			}
-			ICapabilityProvider provider = new ICapabilitySerializable<CompoundTag>() {
+			ComponentProvider provider = new ICapabilitySerializable<CompoundTag>() {
 				@Override
 				public CompoundTag serializeNBT() {
 					return (CompoundTag) new StaminaStorage().writeTag(

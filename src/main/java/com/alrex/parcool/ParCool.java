@@ -11,12 +11,19 @@ import com.alrex.parcool.common.potion.Potions;
 import com.alrex.parcool.server.command.CommandRegistry;
 //identifier
 
-import com.alrex.parcool.utilities.ticker.RenderTickHandler;
+import com.alrex.parcool.utilities.ticker.*;
+import dev.onyxstudios.cca.api.v3.entity.PlayerCopyCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.PlayerTickEvents;
 import me.pepperbell.simplenetworking.SimpleChannel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -62,7 +69,7 @@ public class ParCool implements ModInitializer {
 		setup();
 		doClientStuff();
 		//todo finish capabilities :clueless:
-		Capabilities.register();
+//		Capabilities.register();
 		Effects.registerAll();
 		ItemRegistry.registerAll();
 
@@ -79,8 +86,17 @@ public class ParCool implements ModInitializer {
 
 	public void registerEvents() {
 		RenderTickStartCallback.EVENT.register(new RenderTickHandler());
-
+		CameraSetupCallback.EVENT.register(new CameraSetupHandler());
+		PlayerTickEvents.END.register(new PlayerTickHandler());
+		ServerTickEvents.END_SERVER_TICK.register(new ServerTickHandler());
+		ClientTickEvents.END_CLIENT_TICK.register(new ClientTickHandler());
+		ClientTickEvents.START_CLIENT_TICK.register(new ClientTickHandler());
+		PlayerCopyCallback.EVENT.register(new PlayerCloneEventHandler());
+		LivingEntityEvents.JUMP.register(new JumpEventHandler());
+		LivingEntityEvents.FALL.register(new PlayerFallEventHandler());
+		EntityEvents.ON_JOIN_WORLD.register(new PermissionSendEventHandler());
 	}
+
 	public ParCool() {
 
 	}

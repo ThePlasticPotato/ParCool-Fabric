@@ -8,6 +8,7 @@ import com.alrex.parcool.client.animation.PlayerModelTransformer;
 import com.alrex.parcool.common.capability.capabilities.Capabilities;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -18,7 +19,7 @@ import net.minecraft.nbt.NbtCompound;
 import static net.fabricmc.api.EnvType.CLIENT;
 
 @Environment(CLIENT)
-public class Animation implements Component {
+public class Animation implements Component, AutoSyncedComponent {
 	public static Animation get(PlayerEntity player) {
 		Animation optional = player.getComponent(Capabilities.ANIMATION_CAPABILITY);
 		return optional;

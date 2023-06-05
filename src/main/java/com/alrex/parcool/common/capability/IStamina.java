@@ -3,12 +3,14 @@ package com.alrex.parcool.common.capability;
 import com.alrex.parcool.common.capability.capabilities.Capabilities;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.Nullable;
 
 
-public interface IStamina extends Component {
+public interface IStamina extends Component, AutoSyncedComponent, CommonTickingComponent {
 	@Nullable
 	public static IStamina get(PlayerEntity player) {
 		IStamina optional = player.getComponent(Capabilities.STAMINA_CAPABILITY);

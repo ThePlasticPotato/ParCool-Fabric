@@ -1,18 +1,14 @@
 package com.alrex.parcool.common.event;
 
 import com.alrex.parcool.common.capability.impl.Parkourability;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.entity.player.PlayerEntity;
 
 ;
 
 public class EventPlayerClone {
-	@SubscribeEvent
-	public static void onClone(PlayerEvent.Clone event) {
-		if (event.isWasDeath()) {
-			PlayerEntity from = event.getOriginal();
-			PlayerEntity to = event.getPlayer();
+
+	public static void onClone(PlayerEntity from, PlayerEntity to, boolean isOriginalDead) {
+		if (isOriginalDead) {
 			Parkourability pFrom = Parkourability.get(from);
 			Parkourability pTo = Parkourability.get(to);
 			if (pFrom != null && pTo != null) {

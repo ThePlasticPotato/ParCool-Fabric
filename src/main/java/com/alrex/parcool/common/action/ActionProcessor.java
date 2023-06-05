@@ -102,7 +102,7 @@ public class ActionProcessor {
 
 			if (action.isDoing()) {
 				action.onWorkingTick(player, parkourability, stamina);
-				if (event.side == EnvType.CLIENT) {
+				if (isClient) {
 					action.onWorkingTickInClient(player, parkourability, stamina);
 					if (player.isMainPlayer()) {
 						action.onWorkingTickInLocalClient(player, parkourability, stamina);
@@ -151,11 +151,10 @@ public class ActionProcessor {
 			}
 		}
 	}
-
-	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
+	//@SubscribeEvent
+	@Environment(CLIENT)
 	public void onViewRender() {
-		PlayerEntity player = Minecraft.getInstance().player;
+		PlayerEntity player = MinecraftClient.getInstance().player;
 		if (player == null) return;
 		Parkourability parkourability = Parkourability.get(player);
 		if (parkourability == null) return;

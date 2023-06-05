@@ -7,6 +7,7 @@ import com.alrex.parcool.common.capability.capabilities.Capabilities;
 import com.alrex.parcool.common.info.ActionInfo;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-public class Parkourability implements Component {
+public class Parkourability implements Component, AutoSyncedComponent {
 	@Nullable
 	public static Parkourability get(PlayerEntity player) {
 		Parkourability optional = (Parkourability) player.getComponent(Capabilities.PARKOURABILITY_CAPABILITY);
