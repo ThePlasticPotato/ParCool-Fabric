@@ -17,7 +17,10 @@ import com.alrex.parcool.proxy.ServerProxy;
 import com.alrex.parcool.server.command.CommandRegistry;
 //identifier
 
+import com.alrex.parcool.utilities.FabricDistExecutor;
+import com.alrex.parcool.utilities.RenderTickHandler;
 import com.mojang.brigadier.CommandDispatcher;
+import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import me.pepperbell.simplenetworking.SimpleChannel;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -40,7 +43,7 @@ public class ParCool implements ModInitializer {
 	public static final SimpleChannel CHANNEL_INSTANCE = new SimpleChannel(new Identifier(ParCool.MOD_ID, "message"));
 
 
-	public static final CommonProxy PROXY = DistExecutor.unsafeRunForDist(
+	public static final CommonProxy PROXY = FabricDistExecutor.unsafeRunForDist(
 			() -> ClientProxy::new,
 			() -> ServerProxy::new
 	);
@@ -64,14 +67,21 @@ public class ParCool implements ModInitializer {
 		//todo replace capabilities
 //		eventBus.register(Capabilities.class);
 		Effects.registerAll();
-		ItemRegistry.register();
+		ItemRegistry.registerAll();
 
 		// todo : readd configs
 
 		//todo client stuff :3dsmile:
 		Potions.registerAll();
+
+		registerEvents();
 	}
 
+
+	public void registerEvents() {
+		RenderTickStartCallback.EVENT.register(new RenderTickHandler());
+
+	}
 	public ParCool() {
 
 	}

@@ -6,7 +6,6 @@ import com.alrex.parcool.common.action.StaminaConsumeTiming;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.entity.player.PlayerEntity;
 
 import java.nio.ByteBuffer;
 
@@ -32,10 +31,10 @@ public class BreakfallReady extends Action {
 	@Override
 	public boolean canContinue(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		return (parkourability.getActionInfo().can(BreakfallReady.class)
-				&& KeyBindings.getKeyBreakfall().isDown()
+				&& KeyBindings.getKeyBreakfall().isPressed()
 				&& !stamina.isExhausted()
 				&& !parkourability.get(Crawl.class).isDoing()
-				&& !player.isInWaterOrBubble()
+				&& !player.isInsideWaterOrBubbleColumn()
 				&& (!player.isOnGround() || parkourability.getAdditionalProperties().getLandingTick() < 3)
 		);
 	}

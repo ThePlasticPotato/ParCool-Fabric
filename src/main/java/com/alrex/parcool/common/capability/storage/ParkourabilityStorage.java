@@ -1,21 +1,21 @@
 package com.alrex.parcool.common.capability.storage;
 
 import com.alrex.parcool.common.capability.impl.Parkourability;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.capabilities.Capability;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
 ;
 
 public class ParkourabilityStorage {
 	@Nullable
-	public Tag writeTag(Capability<Parkourability> capability, Parkourability instance, Direction side) {
+	public NbtElement writeTag(ComponentKey<Parkourability> capability, Parkourability instance, Direction side) {
 		return instance.getActionInfo().writeTag();
 	}
 
-	public void readTag(Capability<Parkourability> capability, Parkourability instance, Direction side, Tag nbt) {
+	public void readTag(ComponentKey<Parkourability> capability, Parkourability instance, Direction side, NbtElement nbt) {
 		instance.getActionInfo().readTag(nbt);
 	}
 }

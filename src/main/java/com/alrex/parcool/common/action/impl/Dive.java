@@ -7,12 +7,13 @@ import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.WorldUtil;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
 
 import java.nio.ByteBuffer;
+
+import static net.fabricmc.api.EnvType.CLIENT;
 
 public class Dive extends Action {
 	private boolean justJumped = false;
@@ -20,37 +21,37 @@ public class Dive extends Action {
 	private double playerYSpeed = 0;
 
 	public double getPlayerYSpeed(float partialTick) {
-		return Mth.lerp(partialTick, playerYSpeedOld, playerYSpeed);
+		return MathHelper.lerp(partialTick, playerYSpeedOld, playerYSpeed);
 	}
 
 	@Override
 	public void onWorkingTickInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		playerYSpeedOld = playerYSpeed;
-		playerYSpeed = player.getDeltaMovement().y();
+		playerYSpeed = player.getVelocity().y;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
 		boolean can = (justJumped
 				&& !stamina.isExhausted()
 				&& !parkourability.get(Crawl.class).isDoing()
-				&& !player.isVisuallyCrawling()
+				&& !player.isInSwimmingPose()
 				&& parkourability.get(FastRun.class).canActWithRunning(player)
 				&& parkourability.getActionInfo().can(Dive.class)
 				&& WorldUtil.existsDivableSpace(player)
 		);
-		startInfo.putDouble(player.getDeltaMovement().y);
+		startInfo.putDouble(player.getVelocity().y);
 		justJumped = false;
 		return can;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canContinue(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		return !(player.isFallFlying()
 				|| player.getAbilities().flying
-				|| player.isInWaterOrBubble()
+				|| player.isInsideWaterOrBubbleColumn()
 				|| player.isInLava()
 				|| player.isSwimming()
 				|| player.isOnGround()
@@ -59,11 +60,11 @@ public class Dive extends Action {
 	}
 
 	public void onJump(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		if (!player.isLocalPlayer()) return;
+		if (!player.isMainPlayer()) return;
 		justJumped = true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		double ySpeed = startData.getDouble();
@@ -91,7 +92,7 @@ public class Dive extends Action {
 		playerYSpeedOld = buffer.getDouble();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		double ySpeed = startData.getDouble();

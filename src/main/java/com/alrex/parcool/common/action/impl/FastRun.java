@@ -9,17 +9,17 @@ import com.alrex.parcool.common.action.StaminaConsumeTiming;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-;
+;import static net.fabricmc.api.EnvType.CLIENT;
 
 public class FastRun extends Action {
 	private static final String FAST_RUNNING_MODIFIER_NAME = "parcool.modifier.fastrunnning";
@@ -28,16 +28,16 @@ public class FastRun extends Action {
 
 	@Override
 	public void onServerTick(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		AttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
+		EntityAttributeInstance attr = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 		if (attr == null) return;
 		if (attr.getModifier(FAST_RUNNING_MODIFIER_UUID) != null) attr.removeModifier(FAST_RUNNING_MODIFIER_UUID);
 		if (isDoing()) {
 			player.setSprinting(true);
-			attr.addTransientModifier(new AttributeModifier(
+			attr.addTemporaryModifier(new EntityAttributeModifier(
 					FAST_RUNNING_MODIFIER_UUID,
 					FAST_RUNNING_MODIFIER_NAME,
 					speedModifier / 100d,
-					AttributeModifier.Operation.ADDITION
+					EntityAttributeModifier.Operation.ADDITION
 			));
 		}
 	}
@@ -58,10 +58,10 @@ public class FastRun extends Action {
 		return (parkourability.getActionInfo().can(FastRun.class)
 				&& !stamina.isExhausted()
 				&& player.isSprinting()
-				&& !player.isVisuallyCrawling()
+				&& !player.isInSwimmingPose()
 				&& !player.isSwimming()
 				&& !parkourability.get(Crawl.class).isDoing()
-				&& (KeyBindings.getKeyFastRunning().isDown() || ParCoolConfig.CONFIG_CLIENT.replaceSprintWithFastRun.get())
+				&& (KeyBindings.getKeyFastRunning().isPressed() || ParCoolConfig.CONFIG_CLIENT.replaceSprintWithFastRun.get())
 		);
 	}
 
@@ -86,18 +86,18 @@ public class FastRun extends Action {
 		speedModifier = startData.getDouble();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public boolean canActWithRunning(PlayerEntity player) {
 		return ParCoolConfig.CONFIG_CLIENT.substituteSprintForFastRun.get() ? player.isSprinting() : this.isDoing();
 	}
 
 	//return sprinting tick if substitute sprint is on
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public int getDashTick(AdditionalProperties properties) {
 		return ParCoolConfig.CONFIG_CLIENT.substituteSprintForFastRun.get() ? properties.getSprintingTick() : this.getDoingTick();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public int getNotDashTick(AdditionalProperties properties) {
 		return ParCoolConfig.CONFIG_CLIENT.substituteSprintForFastRun.get() ? properties.getNotSprintingTick() : this.getNotDoingTick();
 	}

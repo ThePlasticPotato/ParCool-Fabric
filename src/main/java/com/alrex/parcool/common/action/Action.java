@@ -2,12 +2,13 @@ package com.alrex.parcool.common.action;
 
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Parkourability;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.TickEvent;
+import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.nio.ByteBuffer;
+
+import static net.fabricmc.api.EnvType.CLIENT;
 
 public abstract class Action {
 	private boolean doing = false;
@@ -38,10 +39,10 @@ public abstract class Action {
 		doing = value;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public abstract boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo);
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public abstract boolean canContinue(PlayerEntity player, Parkourability parkourability, IStamina stamina);
 
 	public void onStart(PlayerEntity player, Parkourability parkourability) {
@@ -50,11 +51,11 @@ public abstract class Action {
 	public void onStartInServer(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 	}
 
@@ -76,11 +77,11 @@ public abstract class Action {
 	public void onWorkingTickInServer(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public void onWorkingTickInClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public void onWorkingTickInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 	}
 
@@ -90,12 +91,12 @@ public abstract class Action {
 	public void onServerTick(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public void onClientTick(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void onRenderTick(TickEvent.RenderTickEvent event, PlayerEntity player, Parkourability parkourability) {
+	@Environment(CLIENT)
+	public void onRenderTick(RenderTickStartCallback callback, PlayerEntity player, Parkourability parkourability) {
 	}
 
 	public void restoreSynchronizedState(ByteBuffer buffer) {

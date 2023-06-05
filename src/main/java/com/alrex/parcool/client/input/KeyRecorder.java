@@ -1,13 +1,12 @@
 package com.alrex.parcool.client.input;
 
-import net.minecraft.client.KeyMapping;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.option.KeyBinding;
+
+import static net.fabricmc.api.EnvType.CLIENT;
 
 
-@OnlyIn(Dist.CLIENT)
+@Environment(CLIENT)
 public class KeyRecorder {
 	public static final KeyState keyForward = new KeyState();
 	public static final KeyState keyBack = new KeyState();
@@ -25,10 +24,9 @@ public class KeyRecorder {
 	public static final KeyState keyQuickTurn = new KeyState();
 	public static final KeyState keyFlipping = new KeyState();
 
-	@SubscribeEvent
-	public static void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase != TickEvent.Phase.START) return;
+	//todo tick sussy
 
+	public static void onClientTick() {
 		record(KeyBindings.getKeyForward(), keyForward);
 		record(KeyBindings.getKeyBack(), keyBack);
 		record(KeyBindings.getKeyRight(), keyRight);
@@ -46,11 +44,11 @@ public class KeyRecorder {
 		record(KeyBindings.getKeyFlipping(), keyFlipping);
 	}
 
-	private static void record(KeyMapping keyBinding, KeyState state) {
-		state.pressed = (keyBinding.isDown() && state.tickKeyDown == 0);
-		state.released = (!keyBinding.isDown() && state.tickNotKeyDown == 0);
-		state.doubleTapped = (keyBinding.isDown() && 0 < state.tickNotKeyDown && state.tickNotKeyDown <= 2);
-		if (keyBinding.isDown()) {
+	private static void record(KeyBinding keyBinding, KeyState state) {
+		state.pressed = (keyBinding.isPressed() && state.tickKeyDown == 0);
+		state.released = (!keyBinding.isPressed() && state.tickNotKeyDown == 0);
+		state.doubleTapped = (keyBinding.isPressed() && 0 < state.tickNotKeyDown && state.tickNotKeyDown <= 2);
+		if (keyBinding.isPressed()) {
 			state.tickKeyDown++;
 			state.tickNotKeyDown = 0;
 		} else {

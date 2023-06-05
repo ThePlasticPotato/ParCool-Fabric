@@ -1,6 +1,6 @@
 package com.alrex.parcool.client.hud;
 
-import net.minecraft.util.Tuple;
+import net.minecraft.util.Pair;
 
 public class Position {
 	public static final Position DEFAULT = new Position(Horizontal.Left, Vertical.Top, 0, 0);
@@ -21,7 +21,7 @@ public class Position {
 	private final int marginVertical;
 
 	//return position of the hud's top of left
-	public Tuple<Integer, Integer> calculate(int width, int height, int screenWidth, int screenHeight) {
+	public Pair<Integer, Integer> calculate(int width, int height, int screenWidth, int screenHeight) {
 		int x;
 		int y;
 		if (alignmentHorizontal == Horizontal.Right) {
@@ -34,6 +34,6 @@ public class Position {
 		} else {
 			y = marginVertical;
 		}
-		return new Tuple<>(x, y);
+		return new Pair<>(x, y);
 	}
 }

@@ -3,7 +3,10 @@ package com.alrex.parcool.common.action;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
+import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.nio.ByteBuffer;
@@ -17,6 +20,7 @@ public class ActionProcessor {
 	private final ByteBuffer bufferOfStarting = ByteBuffer.allocate(128);
 	private int staminaSyncCoolTimeTick = 0;
 
+	//
 	@Environment(CLIENT)
 	public void onTickInClient() {
 		if (event.phase == TickEvent.Phase.START) return;
@@ -74,7 +78,7 @@ public class ActionProcessor {
 				action.onServerTick(player, parkourability, stamina);
 			}
 
-			if (player.isLocalPlayer()) {
+			if (player.isMainPlayer()) {
 				if (action.isDoing()) {
 					boolean canContinue = action.canContinue(player, parkourability, stamina);
 					if (!canContinue) {
@@ -101,9 +105,9 @@ public class ActionProcessor {
 
 			if (action.isDoing()) {
 				action.onWorkingTick(player, parkourability, stamina);
-				if (event.side == LogicalSide.CLIENT) {
+				if (event.side == EnvType.CLIENT) {
 					action.onWorkingTickInClient(player, parkourability, stamina);
-					if (player.isLocalPlayer()) {
+					if (player.isMainPlayer()) {
 						action.onWorkingTickInLocalClient(player, parkourability, stamina);
 						if (timing == StaminaConsumeTiming.OnWorking)
 							stamina.consume(parkourability.getActionInfo().getStaminaConsumptionOf(action.getClass()));
@@ -137,17 +141,16 @@ public class ActionProcessor {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
-	public void onRenderTick(TickEvent.RenderTickEvent event) {
-		PlayerEntity clientPlayer = Minecraft.getInstance().player;
+	@Environment(CLIENT)
+	public void onRenderTick() {
+		PlayerEntity clientPlayer = MinecraftClient.getInstance().player;
 		if (clientPlayer == null) return;
-		for (PlayerEntity player : clientPlayer.level.players()) {
+		for (PlayerEntity player : clientPlayer.world.getPlayers()) {
 			Parkourability parkourability = Parkourability.get(player);
 			if (parkourability == null) return;
 			List<Action> actions = parkourability.getList();
 			for (Action action : actions) {
-				action.onRenderTick(event, player, parkourability);
+				action.onRenderTick(callback, player, parkourability);
 			}
 		}
 	}

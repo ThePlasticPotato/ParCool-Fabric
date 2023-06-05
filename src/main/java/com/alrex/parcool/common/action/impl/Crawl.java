@@ -9,17 +9,18 @@ import com.alrex.parcool.common.action.StaminaConsumeTiming;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.player.PlayerEntity;
+
 
 import java.nio.ByteBuffer;
 
 ;
 
 public class Crawl extends Action {
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
 		return (parkourability.getActionInfo().can(Crawl.class)
@@ -28,14 +29,14 @@ public class Crawl extends Action {
 				&& !parkourability.get(Tap.class).isDoing()
 				&& !parkourability.get(ClingToCliff.class).isDoing()
 				&& parkourability.get(Vault.class).getNotDoingTick() >= 8
-				&& !player.isInWaterOrBubble()
+				&& !player.isInsideWaterOrBubbleColumn()
 				&& (player.isOnGround() || !ParCoolConfig.CONFIG_CLIENT.disableCrawlInAir.get())
 		);
 	}
 
 	@Override
 	public boolean canContinue(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		return KeyBindings.getKeyCrawl().isDown();
+		return KeyBindings.getKeyCrawl().isPressed();
 	}
 
 	@Override
@@ -54,6 +55,6 @@ public class Crawl extends Action {
 	@Override
 	public void onWorkingTick(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		player.setSprinting(false);
-		player.setPose(Pose.SWIMMING);
+		player.setPose(EntityPose.SWIMMING);
 	}
 }

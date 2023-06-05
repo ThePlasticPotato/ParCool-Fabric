@@ -6,7 +6,7 @@ import com.alrex.parcool.common.action.StaminaConsumeTiming;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
-import net.minecraft.world.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.nio.ByteBuffer;
 
@@ -17,7 +17,7 @@ public class Tap extends Action {
 
 	@Override
 	public void onWorkingTickInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		player.setDeltaMovement(player.getDeltaMovement().multiply(0.01, 1, 0.01));
+		player.setVelocity(player.getVelocity().multiply(0.01, 1, 0.01));
 	}
 
 	@Override

@@ -116,7 +116,7 @@ public class ParCoolSettingScreen extends Screen {
 		super.render(matrixStack, mouseX, mouseY, p_230430_4_);
 		renderBackground(matrixStack, 0);
 		int topBarHeight = textRenderer.fontHeight * 2;
-		int topBarItemWidth = (int) (1.6 * Arrays.stream(modeMenuList).map(it -> textRenderer.width(it.title)).max(Integer::compareTo).orElse(0));
+		int topBarItemWidth = (int) (1.6 * Arrays.stream(modeMenuList).map(it -> textRenderer.getWidth(it.title)).max(Integer::compareTo).orElse(0));
 		int topBarOffsetX = width - topBarItemWidth * modeMenuList.length;
 		fillGradient(matrixStack, 0, 0, this.width, topBarHeight, color.getTopBar1(), color.getTopBar2());
 		drawWithShadow(

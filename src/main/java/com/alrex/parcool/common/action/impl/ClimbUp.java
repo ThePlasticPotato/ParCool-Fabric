@@ -8,17 +8,16 @@ import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.EntityUtil;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import java.nio.ByteBuffer;
 
-;
+;import static net.fabricmc.api.EnvType.CLIENT;
 
 public class ClimbUp extends Action {
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
 		ClingToCliff cling = parkourability.get(ClingToCliff.class);
@@ -29,16 +28,16 @@ public class ClimbUp extends Action {
 				&& KeyRecorder.keyJumpState.isPressed();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public boolean canContinue(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		return getDoingTick() < 2;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	@Override
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
-		EntityUtil.addVelocity(player, new Vec3(0, 0.6, 0));
+		EntityUtil.addVelocity(player, new Vec3d(0, 0.6, 0));
 		Animation animation = Animation.get(player);
 		if (animation != null) animation.setAnimator(new ClimbUpAnimator());
 	}

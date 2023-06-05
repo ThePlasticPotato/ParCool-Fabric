@@ -2,6 +2,7 @@ package com.alrex.parcool.client.input;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.impl.client.keybinding.KeyBindingRegistryImpl;
 import net.fabricmc.loader.language.LanguageAdapter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
@@ -24,34 +25,34 @@ public class KeyBindings {
 	private static final KeyBinding keyBindWallSlide = new KeyBinding("key.parcool.WallSlide", InputUtil.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.parcool");
 	private static final KeyBinding keyBindHorizontalWallRun = new KeyBinding("key.parcool.HorizontalWallRun", GLFW.GLFW_KEY_R, "key.categories.parcool");
 	private static final KeyBinding keyBindQuickTurn = new KeyBinding("key.parcool.QuickTurn", GLFW.GLFW_KEY_UNKNOWN, "key.categories.parcool");
-	private static final KeyBinding keyBindOpenSettings = new KeyBinding("key.parcool.openSetting", KeyConf.UNIVERSAL, KeyM.ALT, InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "key.categories.parcool");
+	private static final KeyBinding keyBindOpenSettings = new KeyBinding("key.parcool.openSetting", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "key.categories.parcool");
 
 	public static KeyBinding getKeySprint() {
-		return settings.keySprint;
+		return settings.sprintKey;
 	}
 
 	public static KeyBinding getKeyJump() {
-		return settings.keyJump;
+		return settings.jumpKey;
 	}
 
 	public static KeyBinding getKeySneak() {
-		return settings.keyShift;
+		return settings.sneakKey;
 	}
 
 	public static KeyBinding getKeyLeft() {
-		return settings.keyLeft;
+		return settings.leftKey;
 	}
 
 	public static KeyBinding getKeyRight() {
-		return settings.keyRight;
+		return settings.rightKey;
 	}
 
 	public static KeyBinding getKeyForward() {
-		return settings.keyUp;
+		return settings.forwardKey;
 	}
 
 	public static KeyBinding getKeyBack() {
-		return settings.keyDown;
+		return settings.backKey;
 	}
 
 	public static KeyBinding getKeyCrawl() {
@@ -106,20 +107,20 @@ public class KeyBindings {
 		return keyBindFlipping;
 	}
 
-	@SubscribeEvent
-	public static void register(FMLClientSetupEvent event) {
-		ClientRegistry.registerKeyBinding(keyBindCrawl);
-		ClientRegistry.registerKeyBinding(keyBindGrabWall);
-		ClientRegistry.registerKeyBinding(keyBindBreakfall);
-		ClientRegistry.registerKeyBinding(keyBindFastRunning);
-		ClientRegistry.registerKeyBinding(keyBindDodge);
-		ClientRegistry.registerKeyBinding(keyBindWallSlide);
-		ClientRegistry.registerKeyBinding(keyBindWallJump);
-		ClientRegistry.registerKeyBinding(keyBindVault);
-		ClientRegistry.registerKeyBinding(keyBindHorizontalWallRun);
-		ClientRegistry.registerKeyBinding(keyBindOpenSettings);
-		ClientRegistry.registerKeyBinding(keyBindQuickTurn);
-		ClientRegistry.registerKeyBinding(keyBindFlipping);
-		ClientRegistry.registerKeyBinding(keyBindHangDown);
+
+	public static void register() {
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindCrawl);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindGrabWall);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindBreakfall);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindFastRunning);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindDodge);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindWallSlide);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindWallJump);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindVault);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindHorizontalWallRun);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindOpenSettings);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindQuickTurn);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindFlipping);
+		KeyBindingRegistryImpl.registerKeyBinding(keyBindHangDown);
 	}
 }

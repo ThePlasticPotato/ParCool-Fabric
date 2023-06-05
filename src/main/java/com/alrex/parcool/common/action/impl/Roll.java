@@ -10,10 +10,10 @@ import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.BufferUtil;
 import com.alrex.parcool.utilities.VectorUtil;
-import net.minecraft.world.entity.player.PlayerEntity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import java.nio.ByteBuffer;
 
@@ -25,12 +25,12 @@ public class Roll extends Action {
 
 	public enum Direction {Front, Back}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onClientTick(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
-		if (player.isLocalPlayer()) {
-			if (KeyBindings.getKeyBreakfall().isDown()
-					&& KeyBindings.getKeyForward().isDown()
+		if (player.isMainPlayer()) {
+			if (KeyBindings.getKeyBreakfall().isPressed()
+					&& KeyBindings.getKeyForward().isPressed()
 					&& !parkourability.get(Dodge.class).isDoing()
 					&& ParCoolConfig.CONFIG_CLIENT.enableRollWhenCreative.get()
 					&& player.isCreative()
@@ -53,7 +53,7 @@ public class Roll extends Action {
 
 	@Override
 	public boolean canStart(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startInfo) {
-		BufferUtil.wrap(startInfo).putBoolean(KeyBindings.getKeyBack().isDown());
+		BufferUtil.wrap(startInfo).putBoolean(KeyBindings.getKeyBack().isPressed());
 		return startRequired;
 	}
 
@@ -74,12 +74,12 @@ public class Roll extends Action {
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		startRequired = false;
 		Direction direction = BufferUtil.getBoolean(startData) ? Direction.Back : Direction.Front;
-		double modifier = Math.sqrt(player.getBbWidth());
-		Vec3 vec = VectorUtil.fromYawDegree(player.yBodyRot).scale(modifier);
+		double modifier = Math.sqrt(player.getWidth());
+		Vec3d vec = VectorUtil.fromYawDegree(player.bodyYaw).multiply(modifier);
 		if (direction == Direction.Back) {
-			vec = vec.reverse();
+			vec = vec.negate();
 		}
-		player.setDeltaMovement(vec.x, 0, vec.z);
+		player.setVelocity(vec.x, 0, vec.z);
 		Animation animation = Animation.get(player);
 		if (animation != null) animation.setAnimator(new RollAnimator(direction));
 	}

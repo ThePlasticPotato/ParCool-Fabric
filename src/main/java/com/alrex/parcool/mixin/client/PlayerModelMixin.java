@@ -3,14 +3,14 @@ package com.alrex.parcool.mixin.client;
 import com.alrex.parcool.ParCoolConfig;
 import com.alrex.parcool.client.animation.PlayerModelTransformer;
 import com.alrex.parcool.common.capability.impl.Animation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.PlayerEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,11 +20,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Function;
 
-@Mixin(PlayerModel.class)
-public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
+@Mixin(PlayerEntityModel.class)
+public abstract class PlayerModelMixin<T extends LivingEntity> extends BipedEntityModel<T> {
 	@Shadow
 	@Final
-	private boolean slim;
+	private boolean thinArms;
 	@Shadow
 	@Final
 	public ModelPart jacket;
@@ -50,24 +50,24 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
 		super(p_170677_);
 	}
 
-	public PlayerModelMixin(ModelPart p_170679_, Function<ResourceLocation, RenderType> p_170680_) {
+	public PlayerModelMixin(ModelPart p_170679_, Function<Identifier, RenderLayer> p_170680_) {
 		super(p_170679_, p_170680_);
 	}
 
-	@Inject(method = "Lnet/minecraft/client/model/PlayerModel;setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("HEAD"), cancellable = true)
 	protected void onSetupAnimHead(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info) {
 		if (!(entity instanceof PlayerEntity)) return;
-		PlayerModel model = (PlayerModel) (Object) this;
+		PlayerEntityModel<PlayerEntity> model = (PlayerEntityModel<PlayerEntity>) (Object) this;
 		PlayerEntity player = (PlayerEntity) entity;
-		if (player.isLocalPlayer()
-				&& Minecraft.getInstance().options.getCameraType().isFirstPerson()
+		if (player.isMainPlayer()
+				&& MinecraftClient.getInstance().options.getPerspective().isFirstPerson()
 				&& ParCoolConfig.CONFIG_CLIENT.disableFPVAnimation.get()
 		) return;
 
 		transformer = new PlayerModelTransformer(
 				player,
 				model,
-				slim,
+				thinArms,
 				ageInTicks,
 				limbSwing,
 				limbSwingAmount,
@@ -87,12 +87,12 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
 		}
 	}
 
-	@Inject(method = "Lnet/minecraft/client/model/PlayerModel;setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
+	@Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
 	protected void onSetupAnimTail(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info) {
 		if (!(entity instanceof PlayerEntity)) return;
 		PlayerEntity player = (PlayerEntity) entity;
-		if (player.isLocalPlayer()
-				&& Minecraft.getInstance().options.getCameraType().isFirstPerson()
+		if (player.isMainPlayer()
+				&& MinecraftClient.getInstance().options.getPerspective().isFirstPerson()
 				&& ParCoolConfig.CONFIG_CLIENT.disableFPVAnimation.get()
 		) return;
 

@@ -10,7 +10,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -21,7 +21,7 @@ public class ActionArgumentType implements ArgumentType<Class<? extends Action>>
 		String name = reader.readUnquotedString();
 		Class<? extends Action> result = ActionList.getByName(name);
 		if (result == null) {
-			Message message = new TranslatableComponent("parcool.command.message.invalidActionName", name);
+			Message message = new TranslatableText("parcool.command.message.invalidActionName", name);
 			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
 		}
 		return result;

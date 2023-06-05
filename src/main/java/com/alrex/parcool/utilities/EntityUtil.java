@@ -1,10 +1,11 @@
 package com.alrex.parcool.utilities;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 public class EntityUtil {
-	public static void addVelocity(Entity entity, Vec3 vec) {
-		entity.setDeltaMovement(entity.getDeltaMovement().add(vec));
+	public static void addVelocity(Entity entity, Vec3d vec) {
+		entity.setVelocity(entity.getVelocity().add(vec));
 	}
 }
