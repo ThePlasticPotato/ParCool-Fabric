@@ -27,8 +27,7 @@ import javax.annotation.Nullable;
 
 public class EventAttachCapability {
 
-	@SubscribeEvent
-	public static void onAttachCapability(AttachCapabilitiesEvent<Entity> event) {
+	public static void onAttachCapability() {
 		if (!(event.getObject() instanceof PlayerEntity)) return;
 		PlayerEntity player = (PlayerEntity) event.getObject();
 		//Parkourability

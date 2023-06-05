@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -23,9 +24,8 @@ public class ActionProcessor {
 	//
 	@Environment(CLIENT)
 	public void onTickInClient() {
-		if (event.phase == TickEvent.Phase.START) return;
-		if (event.side != LogicalSide.CLIENT) return;
-		PlayerEntity player = event.player;
+		PlayerEntity player = MinecraftClient.getInstance().player;
+		if (player == null) return;
 		Animation animation = Animation.get(player);
 		if (animation == null) return;
 		Parkourability parkourability = Parkourability.get(player);
@@ -33,15 +33,12 @@ public class ActionProcessor {
 		animation.tick(player, parkourability);
 	}
 
-	@SubscribeEvent
-	public void onTick(TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.START) return;
-		PlayerEntity player = event.player;
+	public void onTick(PlayerEntity player, boolean isClient) {
 		Parkourability parkourability = Parkourability.get(player);
 		IStamina stamina = IStamina.get(player);
 		if (parkourability == null || stamina == null) return;
 		List<Action> actions = parkourability.getList();
-		boolean needSync = event.side == LogicalSide.CLIENT && player.isLocalPlayer();
+		boolean needSync = isClient && player.isMainPlayer();
 		SyncActionStateMessage.Encoder builder = SyncActionStateMessage.Encoder.reset();
 
 		if (needSync) {
@@ -72,7 +69,7 @@ public class ActionProcessor {
 			}
 
 			action.onTick(player, parkourability, stamina);
-			if (event.side == LogicalSide.CLIENT) {
+			if (isClient) {
 				action.onClientTick(player, parkourability, stamina);
 			} else {
 				action.onServerTick(player, parkourability, stamina);

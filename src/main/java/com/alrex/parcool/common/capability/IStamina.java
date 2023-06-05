@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 public interface IStamina extends Component {
 	@Nullable
 	public static IStamina get(PlayerEntity player) {
-		IStamina optional = (IStamina) player.getComponent(ComponentRegistry.get(Capabilities.STAMINA_LOCATION));
+		IStamina optional = player.getComponent(Capabilities.STAMINA_CAPABILITY);
 		return optional;
 	}
 

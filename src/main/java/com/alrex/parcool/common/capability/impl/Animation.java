@@ -20,7 +20,7 @@ import static net.fabricmc.api.EnvType.CLIENT;
 @Environment(CLIENT)
 public class Animation implements Component {
 	public static Animation get(PlayerEntity player) {
-		Animation optional = (Animation) player.getComponent(ComponentRegistry.get(Capabilities.ANIMATION_LOCATION));
+		Animation optional = player.getComponent(Capabilities.ANIMATION_CAPABILITY);
 		return optional;
 	}
 
