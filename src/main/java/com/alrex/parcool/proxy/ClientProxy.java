@@ -10,38 +10,30 @@ import static net.fabricmc.api.EnvType.CLIENT;
 public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerMessages(SimpleChannel instance) {
-		instance.registerMessage(
-				3,
+		instance.registerC2SPacket(
 				StartBreakfallMessage.class,
-				StartBreakfallMessage::encode,
-				StartBreakfallMessage::decode,
-				StartBreakfallMessage::handleClient
+				3,
+				StartBreakfallMessage::decode
 		);
-		instance.registerMessage(
-				10,
+		instance.registerC2SPacket(
 				SyncStaminaMessage.class,
-				SyncStaminaMessage::encode,
-				SyncStaminaMessage::decode,
-				SyncStaminaMessage::handleClient
+				10,
+				SyncStaminaMessage::decode
 		);
-		instance.registerMessage(
-				12,
+		instance.registerC2SPacket(
 				LimitationByServerMessage.class,
-				LimitationByServerMessage::encode,
-				LimitationByServerMessage::decode,
-				LimitationByServerMessage::handle
+				12,
+				LimitationByServerMessage::decode
 		);
-		instance.registerMessage(
-				15,
+		instance.registerC2SPacket(
 				SyncActionStateMessage.class,
-				SyncActionStateMessage::encode,
-				SyncActionStateMessage::decode,
-				SyncActionStateMessage::handleClient
+				15,
+				SyncActionStateMessage::decode
 		);
 		instance.registerC2SPacket(
 				StaminaControlMessage.class,
 				16,
-				StaminaControlMessage::handle
+				StaminaControlMessage::decode
 		);
 	}
 }

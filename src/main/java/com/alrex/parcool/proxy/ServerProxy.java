@@ -12,37 +12,28 @@ public class ServerProxy extends CommonProxy {
 		instance.registerS2CPacket(
 				StartBreakfallMessage.class,
 				3,
-				StartBreakfallMessage::encode,
-				StartBreakfallMessage::decode,
-				StartBreakfallMessage::handleServer
+				StartBreakfallMessage::decode
 		);
 		instance.registerS2CPacket(
-				10,
 				SyncStaminaMessage.class,
-				SyncStaminaMessage::encode,
-				SyncStaminaMessage::decode,
-				SyncStaminaMessage::handleServer
+				10,
+				SyncStaminaMessage::decode
 		);
 		instance.registerS2CPacket(
-				12,
 				LimitationByServerMessage.class,
-				LimitationByServerMessage::encode,
-				LimitationByServerMessage::decode,
-				null
+				12,
+				LimitationByServerMessage::decode
 		);
-		instance.registerMessage(
-				15,
+		instance.registerS2CPacket(
 				SyncActionStateMessage.class,
-				SyncActionStateMessage::encode,
-				SyncActionStateMessage::decode,
-				SyncActionStateMessage::handleServer
+				15,
+				SyncActionStateMessage::decode
+
 		);
-		instance.registerMessage(
-				16,
+		instance.registerS2CPacket(
 				StaminaControlMessage.class,
-				StaminaControlMessage::encode,
-				StaminaControlMessage::decode,
-				null
+				16,
+				StaminaControlMessage::decode
 		);
 	}
 }

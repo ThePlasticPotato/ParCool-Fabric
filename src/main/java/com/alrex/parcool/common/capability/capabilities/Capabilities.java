@@ -44,6 +44,8 @@ public class Capabilities implements EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+        //todo check if player has tag before registering
+
         registry.registerForPlayers(PARKOURABILITY_CAPABILITY, player-> new Parkourability(), RespawnCopyStrategy.ALWAYS_COPY);
         registry.registerForPlayers(STAMINA_CAPABILITY, player-> new Stamina(), RespawnCopyStrategy.INVENTORY);
         registry.registerForPlayers(ANIMATION_CAPABILITY, player-> new Animation(), RespawnCopyStrategy.ALWAYS_COPY);

@@ -3,6 +3,7 @@ package com.alrex.parcool.common.info;
 import com.alrex.parcool.ParCool;
 import com.alrex.parcool.ParCoolConfig;
 import com.alrex.parcool.common.action.Action;
+import com.alrex.parcool.common.network.LimitationByServerMessage;
 import net.minecraft.nbt.NbtElement;
 
 public class ActionInfo {

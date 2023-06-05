@@ -3,6 +3,8 @@ package com.alrex.parcool.common.action;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
+import com.alrex.parcool.common.network.SyncActionStateMessage;
+import com.alrex.parcool.common.network.SyncStaminaMessage;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
