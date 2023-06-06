@@ -21,8 +21,9 @@ import static net.fabricmc.api.EnvType.CLIENT;
 @Environment(CLIENT)
 public class Animation implements Component, AutoSyncedComponent {
 	public static Animation get(PlayerEntity player) {
-		Animation optional = player.getComponent(Capabilities.ANIMATION_CAPABILITY);
-		return optional;
+		LazyOptional<Animation> optional = LazyOptional.of(() ->player.getComponent(Capabilities.ANIMATION_CAPABILITY));
+		if (!optional.isPresent()) return null;
+		return optional.orElseThrow(IllegalStateException::new);
 	}
 
 	private Animator animator = null;

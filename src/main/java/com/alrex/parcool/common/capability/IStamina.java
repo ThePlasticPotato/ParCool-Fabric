@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 public interface IStamina extends Component, AutoSyncedComponent, CommonTickingComponent {
 	@Nullable
 	public static IStamina get(PlayerEntity player) {
-		IStamina optional = player.getComponent(Capabilities.STAMINA_CAPABILITY);
-		return optional;
+		LazyOptional<IStamina> optional = LazyOptional.of(() -> player.getComponent(Capabilities.STAMINA_CAPABILITY));
+		return optional.orElse(null);
 	}
 
 	public int getMaxStamina();

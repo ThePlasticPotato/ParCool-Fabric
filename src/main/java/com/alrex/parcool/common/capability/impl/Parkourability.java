@@ -19,8 +19,8 @@ import java.util.List;
 public class Parkourability implements Component, AutoSyncedComponent {
 	@Nullable
 	public static Parkourability get(PlayerEntity player) {
-		Parkourability optional = (Parkourability) player.getComponent(Capabilities.PARKOURABILITY_CAPABILITY);
-		return optional;
+		LazyOptional<Parkourability> optional = LazyOptional.of(() -> player.getComponent(Capabilities.PARKOURABILITY_CAPABILITY));
+		return optional.orElse(null);
 	}
 
 	private final ActionInfo info = new ActionInfo();
