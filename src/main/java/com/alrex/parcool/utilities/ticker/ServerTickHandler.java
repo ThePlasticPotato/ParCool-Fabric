@@ -9,4 +9,5 @@ public class ServerTickHandler implements ServerTickEvents.EndTick {
     @Override
     public void onEndTick(MinecraftServer server) {
     }
+
 }

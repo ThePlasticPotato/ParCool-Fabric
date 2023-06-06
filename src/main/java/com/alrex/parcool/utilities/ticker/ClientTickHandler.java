@@ -7,16 +7,24 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class ClientTickHandler implements ClientTickEvents.EndTick, ClientTickEvents.StartTick {
     @Environment(EnvType.CLIENT)
     @Override
     public void onEndTick(MinecraftClient client) {
-        ParCool.ACTION_PROCESSOR.onTickInClient();
+        if (client.world != null) {
+            ParCool.ACTION_PROCESSOR.onTickInClient();
+            PlayerEntity player = client.player;
+            if (player == null) return;
+            ParCool.ACTION_PROCESSOR.onTick(player, true);
+        }
     }
     @Environment(EnvType.CLIENT)
     @Override
     public void onStartTick(MinecraftClient client) {
-        EventOpenSettingsParCool.onTick();
+        if (client.world != null) {
+            EventOpenSettingsParCool.onTick();
+        }
     }
 }
