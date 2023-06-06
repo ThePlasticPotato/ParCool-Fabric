@@ -8,9 +8,13 @@ import com.alrex.parcool.common.capability.capabilities.Capabilities;
 import com.alrex.parcool.common.item.ItemRegistry;
 import com.alrex.parcool.common.potion.Effects;
 import com.alrex.parcool.common.potion.Potions;
+import com.alrex.parcool.proxy.ClientProxy;
+import com.alrex.parcool.proxy.CommonProxy;
+import com.alrex.parcool.proxy.ServerProxy;
 import com.alrex.parcool.server.command.CommandRegistry;
 //identifier
 
+import com.alrex.parcool.utilities.FabricDistExecutor;
 import com.alrex.parcool.utilities.ticker.*;
 import dev.onyxstudios.cca.api.v3.entity.PlayerCopyCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
@@ -20,10 +24,14 @@ import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEven
 import io.github.fabricators_of_create.porting_lib.event.common.PlayerTickEvents;
 import me.pepperbell.simplenetworking.SimpleChannel;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -45,14 +53,19 @@ public class ParCool implements ModInitializer {
 	//todo replace with new network system
 	public static final SimpleChannel CHANNEL_INSTANCE = new SimpleChannel(new Identifier(ParCool.MOD_ID, "message"));
 
+//	public static final ClientProxy CLIENT_PROXY = new ClientProxy();
+//	public static final ServerProxy SERVER_PROXY = new ServerProxy();
+
 //todo networking lol
 
-//	public static final CommonProxy PROXY = FabricDistExecutor.unsafeRunForDist(
-//			() -> ClientProxy::new,
-//			() -> ServerProxy::new
-//	);
+	public static final CommonProxy PROXY = switch(FabricLoader.getInstance().getEnvironmentType()) {
+		case CLIENT -> new ClientProxy();
+		case SERVER -> new ServerProxy();
+	};
 
 	public static final Logger LOGGER = LogManager.getLogger();
+
+
 
 	//only in Client
 	public static boolean isActive() {
@@ -73,9 +86,12 @@ public class ParCool implements ModInitializer {
 		Effects.registerAll();
 		ItemRegistry.registerAll();
 
+		PROXY.registerMessages(CHANNEL_INSTANCE);
+
 		// nevermind configs work :3dsmile:
 		ModLoadingContext.registerConfig(MOD_ID, ModConfig.Type.SERVER, ParCoolConfig.SERVER_SPEC);
-		ModLoadingContext.registerConfig(MOD_ID, ModConfig.Type.CLIENT, ParCoolConfig.CLIENT_SPEC);
+
+
 
 		//todo client stuff :3dsmile:
 		Potions.registerAll();
@@ -108,15 +124,6 @@ public class ParCool implements ModInitializer {
 
 	private void doClientStuff() {
 
-	}
-
-
-	public class Client implements ClientModInitializer {
-
-		@Override
-		public void onInitializeClient() {
-			KeyBindings.register();
-		}
 	}
 
 }

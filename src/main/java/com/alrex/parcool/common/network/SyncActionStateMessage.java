@@ -64,7 +64,7 @@ public class SyncActionStateMessage implements S2CPacket, C2SPacket {
     @Environment(SERVER)
     @Override
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
-        ParCool.CHANNEL_INSTANCE.send((S2CPacket) this, responseSender);
+        ParCool.CHANNEL_INSTANCE.sendToClient(this, player);
         if (player == null) return;
 
         Parkourability parkourability = Parkourability.get(player);
@@ -105,7 +105,7 @@ public class SyncActionStateMessage implements S2CPacket, C2SPacket {
             clientSide = true;
         } else {
             player = (PlayerEntity) responseSender;
-            ParCool.CHANNEL_INSTANCE.send((C2SPacket) this, responseSender);
+            ParCool.CHANNEL_INSTANCE.sendToServer(this);
             if (player == null) return;
             clientSide = false;
         }

@@ -64,7 +64,7 @@ public class SyncStaminaMessage implements C2SPacket, S2CPacket {
     @Environment(SERVER)
     @Override
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
-        ParCool.CHANNEL_INSTANCE.send((S2CPacket) this, responseSender);
+        ParCool.CHANNEL_INSTANCE.sendToClient(this, player);
         if (player == null) return;
         IStamina stamina = IStamina.get(player);
         if (stamina == null) return;
@@ -83,7 +83,7 @@ public class SyncStaminaMessage implements C2SPacket, S2CPacket {
             if (player == null || player.isMainPlayer()) return;
         } else {
             player = (PlayerEntity) responseSender;
-            ParCool.CHANNEL_INSTANCE.send((C2SPacket) this, responseSender);
+            ParCool.CHANNEL_INSTANCE.sendToServer(this);
             if (player == null) return;
         }
         IStamina stamina = IStamina.get(player);

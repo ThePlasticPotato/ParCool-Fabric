@@ -5,7 +5,7 @@ import me.pepperbell.simplenetworking.SimpleChannel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(EnvType.SERVER)
+//@Environment(EnvType.SERVER)
 public class ServerProxy extends CommonProxy {
 	@Override
 	public void registerMessages(SimpleChannel instance) {

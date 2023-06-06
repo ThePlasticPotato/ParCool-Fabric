@@ -43,7 +43,7 @@ public class StaminaControlMessage implements S2CPacket, C2SPacket {
         message.value = value;
         message.add = add;
 
-        ParCool.CHANNEL_INSTANCE.send((S2CPacket) message, (PacketSender) player);
+        ParCool.CHANNEL_INSTANCE.sendToClient(message,player);
     }
     @Environment(SERVER)
     @Override

@@ -19,7 +19,7 @@
 			"com.alrex.parcool.ParCool"
 		],
 		"client": [
-			"com.alrex.parcool.ParCool.Client"
+			"com.alrex.parcool.ParCoolClient"
 		]
 	},
 	"mixins": [
@@ -30,9 +30,7 @@
 		"minecraft": "~1.18.2",
 		"java": ">=17",
 		"fabric-api": "*",
-		"fabric-language-kotlin": ">=1.8.21",
-		"com_electronwill_night-config_core": "*",
-		"com_electronwill_night-config_toml": "*"
+		"fabric-language-kotlin": ">=1.8.21"
 	},
 	"suggests": {
 		"another-mod": "*"

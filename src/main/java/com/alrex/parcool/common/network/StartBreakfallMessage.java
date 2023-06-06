@@ -45,7 +45,7 @@ public class StartBreakfallMessage implements S2CPacket, C2SPacket {
     public static void send(ServerPlayerEntity player) {
         StartBreakfallMessage message = new StartBreakfallMessage();
         message.playerID = player.getUuid();
-        ParCool.CHANNEL_INSTANCE.send((S2CPacket) message, (PacketSender) player);
+        ParCool.CHANNEL_INSTANCE.sendToClient(message, player);
     }
 
     @Override

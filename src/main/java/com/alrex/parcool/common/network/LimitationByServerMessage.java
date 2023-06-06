@@ -127,7 +127,7 @@ public class LimitationByServerMessage implements S2CPacket, C2SPacket {
     public static void send(ServerPlayerEntity player) {
         LimitationByServerMessage msg = newInstanceForServerWide();
         msg.forIndividuals = false;
-        ParCool.CHANNEL_INSTANCE.send((S2CPacket) msg, (PacketSender) player);
+        ParCool.CHANNEL_INSTANCE.sendToClient(msg, player);
     }
 
     public static void sendIndividualLimitation(ServerPlayerEntity player) {
@@ -135,7 +135,7 @@ public class LimitationByServerMessage implements S2CPacket, C2SPacket {
         if (parkourability == null) return;
         LimitationByServerMessage msg = newInstance(parkourability.getActionInfo().getIndividualLimitation());
         msg.forIndividuals = true;
-        ParCool.CHANNEL_INSTANCE.send((S2CPacket) msg, (PacketSender) player);
+        ParCool.CHANNEL_INSTANCE.sendToClient(msg, player);
     }
 
     @Environment(CLIENT)
