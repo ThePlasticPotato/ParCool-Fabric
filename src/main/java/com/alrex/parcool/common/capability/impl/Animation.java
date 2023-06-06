@@ -70,7 +70,7 @@ public class Animation implements Component, AutoSyncedComponent {
 		) return;
 		animator.onCameraSetUp(player, parkourability);
 	}
-
+	@Environment(CLIENT)
 	public void tick(PlayerEntity player, Parkourability parkourability) {
 		passiveAnimation.tick(player, parkourability);
 		if (animator != null) {

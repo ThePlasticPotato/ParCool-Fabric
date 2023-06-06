@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"com.alrex.parcool.ParCoolClient"
+		],
+		"cardinal-components": [
+			"com.alrex.parcool.common.capability.capabilities.Capabilities"
 		]
 	},
 	"mixins": [

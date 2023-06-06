@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class KeyBindings {
-	private static final GameOptions settings = MinecraftClient.getInstance().options;
+//	private static final GameOptions settings = MinecraftClient.getInstance().options;
 	private static final KeyBinding keyBindCrawl = new KeyBinding("key.parcool.Crawl", GLFW.GLFW_KEY_C, "key.categories.parcool");
 	private static final KeyBinding keyBindGrabWall = new KeyBinding("key.parcool.ClingToCliff", InputUtil.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.parcool");
 	private static final KeyBinding keyBindBreakfall = new KeyBinding("key.parcool.Breakfall", GLFW.GLFW_KEY_R, "key.categories.parcool");
@@ -28,31 +28,31 @@ public class KeyBindings {
 	private static final KeyBinding keyBindOpenSettings = new KeyBinding("key.parcool.openSetting", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "key.categories.parcool");
 
 	public static KeyBinding getKeySprint() {
-		return settings.sprintKey;
+		return MinecraftClient.getInstance().options.sprintKey;
 	}
 
 	public static KeyBinding getKeyJump() {
-		return settings.jumpKey;
+		return MinecraftClient.getInstance().options.jumpKey;
 	}
 
 	public static KeyBinding getKeySneak() {
-		return settings.sneakKey;
+		return MinecraftClient.getInstance().options.sneakKey;
 	}
 
 	public static KeyBinding getKeyLeft() {
-		return settings.leftKey;
+		return MinecraftClient.getInstance().options.leftKey;
 	}
 
 	public static KeyBinding getKeyRight() {
-		return settings.rightKey;
+		return MinecraftClient.getInstance().options.rightKey;
 	}
 
 	public static KeyBinding getKeyForward() {
-		return settings.forwardKey;
+		return MinecraftClient.getInstance().options.forwardKey;
 	}
 
 	public static KeyBinding getKeyBack() {
-		return settings.backKey;
+		return MinecraftClient.getInstance().options.backKey;
 	}
 
 	public static KeyBinding getKeyCrawl() {

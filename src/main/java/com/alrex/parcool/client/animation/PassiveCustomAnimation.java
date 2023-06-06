@@ -8,6 +8,8 @@ import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.utilities.EasingFunctions;
 import com.alrex.parcool.utilities.MathUtil;
 import com.alrex.parcool.utilities.VectorUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 
 ;
@@ -18,7 +20,7 @@ public class PassiveCustomAnimation {
 	private int flyingAnimationLevelOld = 0;
 	private int flyingAnimationLevel = 0;
 	private static final int flyingMaxLevel = 20;
-
+	@Environment(EnvType.CLIENT)
 	public void tick(PlayerEntity player, Parkourability parkourability) {
 		flyingAnimationLevelOld = flyingAnimationLevel;
 		if (KeyBindings.getKeyForward().isPressed() && player.getAbilities().flying) {
