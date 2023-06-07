@@ -8,6 +8,7 @@ import com.alrex.parcool.common.capability.capabilities.Capabilities;
 import com.alrex.parcool.common.item.ItemRegistry;
 import com.alrex.parcool.common.potion.Effects;
 import com.alrex.parcool.common.potion.Potions;
+import com.alrex.parcool.proxy.AllProxy;
 import com.alrex.parcool.proxy.ClientProxy;
 import com.alrex.parcool.proxy.CommonProxy;
 import com.alrex.parcool.proxy.ServerProxy;
@@ -56,12 +57,13 @@ public class ParCool implements ModInitializer {
 //	public static final ClientProxy CLIENT_PROXY = new ClientProxy();
 //	public static final ServerProxy SERVER_PROXY = new ServerProxy();
 
-//todo networking lol
+// todo: temp
+//	public static final CommonProxy PROXY = switch(FabricLoader.getInstance().getEnvironmentType()) {
+//		case CLIENT -> new ClientProxy();
+//		case SERVER -> new ServerProxy();
+//	};
 
-	public static final CommonProxy PROXY = switch(FabricLoader.getInstance().getEnvironmentType()) {
-		case CLIENT -> new ClientProxy();
-		case SERVER -> new ServerProxy();
-	};
+	public static final AllProxy PROXY = new AllProxy();
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
