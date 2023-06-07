@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.DataOutput;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,11 +77,12 @@ public class Parkourability implements Component, AutoSyncedComponent {
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-
+		getActionInfo().readTag(tag);
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
+		tag.copyFrom((NbtCompound) getActionInfo().writeTag());
 
 	}
 }

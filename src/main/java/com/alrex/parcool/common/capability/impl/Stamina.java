@@ -121,11 +121,17 @@ public class Stamina implements IStamina {
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-
+		if (tag instanceof NbtCompound) {
+			set(tag.getInt("value"));
+			setExhaustion(tag.getBoolean("exhausted"));
+		} else {
+			throw new IllegalArgumentException("Tag for StaminaStorage, is not CompoundTag");
+		}
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
-
+		tag.putBoolean("exhausted", isExhausted());
+		tag.putInt("value", get());
 	}
 }
