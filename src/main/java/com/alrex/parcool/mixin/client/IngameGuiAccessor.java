@@ -11,4 +11,10 @@ public interface IngameGuiAccessor {
 
     @Accessor
     void setScaledHeight(int scaledHeight);
+
+    @Accessor
+    int getScaledWidth();
+
+    @Accessor
+    void setScaledWidth(int scaledWidth);
 }

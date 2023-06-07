@@ -1,17 +1,14 @@
 //todo: stamina
-
+//
 //package com.alrex.parcool.client.hud;
 //
 //import com.alrex.parcool.client.hud.impl.StaminaHUDController;
-//import net.minecraftforge.client.gui.IIngameOverlay;
-//import net.minecraftforge.client.gui.OverlayRegistry;
-//import net.minecraftforge.event.TickEvent;
-//import net.minecraftforge.eventbus.api.SubscribeEvent;
-//import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+//import net.minecraft.client.gui.DrawableHelper;
+//import net.minecraft.client.gui.screen.Overlay;
 //
 //public class HUDRegistry {
 //	private static HUDRegistry instance = null;
-//	private static IIngameOverlay Stamina_HUD = null;
+//	private static DrawableHelper Stamina_HUD = null;
 //
 //	public static HUDRegistry getInstance() {
 //		if (instance == null) instance = new HUDRegistry();
@@ -20,7 +17,7 @@
 //
 //	@SubscribeEvent
 //	public void onSetup(FMLCommonSetupEvent event) {
-//		Stamina_HUD = OverlayRegistry.registerOverlayTop("ParCool Stamina", StaminaHUDController.getInstance());
+//		Stamina_HUD = .registerOverlayTop("ParCool Stamina", StaminaHUDController.getInstance());
 //	}
 //
 //	@SubscribeEvent

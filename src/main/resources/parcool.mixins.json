@@ -6,11 +6,12 @@
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8",
   "client": [
+    "client.IngameGuiAccessor",
+    "client.InGameHudMixin",
     "client.LocalPlayerMixin",
-    "client.PlayerModelMixin",
-    "client.PlayerRendererMixin",
     "client.MixinGameRenderer",
-    "client.IngameGuiAccessor"
+    "client.PlayerModelMixin",
+    "client.PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
