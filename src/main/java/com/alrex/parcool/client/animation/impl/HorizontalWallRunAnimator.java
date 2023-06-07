@@ -71,7 +71,7 @@ public class HorizontalWallRunAnimator extends Animator {
 		if (camera == null)
 			return;
 
-		float factor = getFactor((float) (getTick() + ParCool.PARTIALTICK));
+		float factor = getFactor((float) (getTick() + MinecraftClient.getInstance().getTickDelta()));
 		float angle = factor * 20 * (wallIsRightSide ? -1 : 1);
 
 		IParCoolCamera parcoolCamera = (IParCoolCamera) camera;

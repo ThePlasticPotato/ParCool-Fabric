@@ -21,8 +21,8 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayerEntity {
 		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 		IStamina stamina = IStamina.get(player);
 		if (stamina == null) return;
-		if (stamina.isExhausted()) {
-			player.setSprinting(false);
-		}
+//		if (stamina.isExhausted()) {
+//			player.setSprinting(false);
+//		}
 	}
 }

@@ -83,8 +83,8 @@ public class SpeedVaultAnimator extends Animator {
 	public void onCameraSetUp(PlayerEntity clientPlayer, Parkourability parkourability) {
 		if (!MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
 				ParCoolConfig.CONFIG_CLIENT.disableCameraVault.get()) return;
-		float factor = getFactor((float) (getTick() + ParCool.PARTIALTICK));
-		float phase = (float) ((getTick() + ParCool.PARTIALTICK) / MAX_TIME);
+		float factor = getFactor((float) (getTick() + MinecraftClient.getInstance().getTickDelta()));
+		float phase = (float) ((getTick() + MinecraftClient.getInstance().getTickDelta()) / MAX_TIME);
 		float forwardFactor = (float) Math.sin(phase * 2 * Math.PI) + 0.5f;
 		Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 		if (camera == null) return;

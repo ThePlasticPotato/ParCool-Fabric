@@ -70,10 +70,10 @@ public class KongVaultAnimator extends Animator {
 	public void onCameraSetUp(PlayerEntity clientPlayer, Parkourability parkourability) {
 		if (!MinecraftClient.getInstance().options.getPerspective().isFirstPerson() ||
 				ParCoolConfig.CONFIG_CLIENT.disableCameraVault.get()) return;
-		float phase = (float) ((getTick() + ParCool.PARTIALTICK) / MAX_TIME);
+		float phase = (float) ((getTick() + MinecraftClient.getInstance().getTickDelta()) / MAX_TIME);
 		float factor = getFactor(phase);
 		Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 		if (camera == null) return;
-		camera.setAnglesInternal(camera.getYaw(), 30 * factor + clientPlayer.getPitch((float) ParCool.PARTIALTICK));
+		camera.setAnglesInternal(camera.getYaw(), 30 * factor + clientPlayer.getPitch((float) MinecraftClient.getInstance().getTickDelta()));
 	}
 }

@@ -70,11 +70,11 @@ public class RollAnimator extends Animator {
 		Roll roll = parkourability.get(Roll.class);
 		float sign = direction == Roll.Direction.Front ? 1 : -1;
 		if (roll.isDoing() && clientPlayer.isMainPlayer() && MinecraftClient.getInstance().options.getPerspective().isFirstPerson() && !ParCoolConfig.CONFIG_CLIENT.disableCameraRolling.get()) {
-			float factor = calculateMovementFactor((float) ((roll.getDoingTick() + ParCool.PARTIALTICK) / (float) roll.getRollMaxTick()));
+			float factor = calculateMovementFactor((float) ((roll.getDoingTick() + MinecraftClient.getInstance().getTickDelta()) / (float) roll.getRollMaxTick()));
 			Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 			if (camera == null) return;
 
-			camera.setAnglesInternal(camera.getYaw(), sign * (factor > 0.5 ? factor - 1 : factor) * 360f + clientPlayer.getPitch((float) ParCool.PARTIALTICK));
+			camera.setAnglesInternal(camera.getYaw(), sign * (factor > 0.5 ? factor - 1 : factor) * 360f + clientPlayer.getPitch((float) MinecraftClient.getInstance().getTickDelta()));
 		}
 	}
 }

@@ -82,6 +82,6 @@ public class HangAnimator extends Animator {
 		if (camera == null) return;
 
 		HangDown hangDown = parkourability.get(HangDown.class);
-		camera.setAnglesInternal(camera.getYaw(), (float) (clientPlayer.getPitch(ParCool.PARTIALTICK) + getRotateAngle(hangDown, ParCool.PARTIALTICK)));
+		camera.setAnglesInternal(camera.getYaw(), (float) (clientPlayer.getPitch(MinecraftClient.getInstance().getTickDelta()) + getRotateAngle(hangDown, MinecraftClient.getInstance().getTickDelta())));
 	}
 }

@@ -1,5 +1,6 @@
 package com.alrex.parcool.common.action;
 
+import com.alrex.parcool.ParCool;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Animation;
 import com.alrex.parcool.common.capability.impl.Parkourability;
@@ -56,6 +57,10 @@ public class ActionProcessor {
 		}
 		parkourability.getAdditionalProperties().onTick(player, parkourability);
 		for (Action action : actions) {
+
+			if (action.isDoing()) {
+				ParCool.LOGGER.info("Ticking doing action: " + action.getClass().getName());
+			}
 			StaminaConsumeTiming timing = action.getStaminaConsumeTiming();
 			if (needSync) {
 				bufferOfPreState.clear();

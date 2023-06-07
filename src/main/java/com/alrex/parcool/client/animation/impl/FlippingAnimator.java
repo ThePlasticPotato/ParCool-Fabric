@@ -173,12 +173,12 @@ public class FlippingAnimator extends Animator {
 
 		if (camera == null) return;
 
-		float phase = (float) ((getTick() + ParCool.PARTIALTICK) / getMaxAnimationTick());
+		float phase = (float) ((getTick() + MinecraftClient.getInstance().getTickDelta()) / getMaxAnimationTick());
 		float factor = angleFactor(phase);
 		if (direction == Flipping.FlippingDirection.Front) {
-			camera.setAnglesInternal(camera.getYaw(), (float)(clientPlayer.getPitch((float) ParCool.PARTIALTICK)) + factor * 360 - ((phase > 0.5) ? 360 : 0));
+			camera.setAnglesInternal(camera.getYaw(), (float)(clientPlayer.getPitch((float) MinecraftClient.getInstance().getTickDelta())) + factor * 360 - ((phase > 0.5) ? 360 : 0));
 		} else {
-			camera.setAnglesInternal(camera.getYaw(),(float)(clientPlayer.getPitch((float) ParCool.PARTIALTICK)) - factor * 360 + ((phase > 0.5) ? 360 : 0));
+			camera.setAnglesInternal(camera.getYaw(),(float)(clientPlayer.getPitch((float) MinecraftClient.getInstance().getTickDelta())) - factor * 360 + ((phase > 0.5) ? 360 : 0));
 		}
 	}
 }
