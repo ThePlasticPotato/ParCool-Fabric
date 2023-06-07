@@ -13,7 +13,7 @@ public class PermissionSendEventHandler implements EntityEvents.JoinWorld {
         if (entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             EventSendPermissions.JoinEvent(player);
-            return false;
+            return true;
         }
         return true;
     }

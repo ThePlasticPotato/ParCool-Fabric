@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public class PlayerTickHandler implements PlayerTickEvents.End {
     @Override
     public void onEndOfPlayerTick(PlayerEntity player) {
-        ParCool.ACTION_PROCESSOR.onTick(player, player.world.isClient);
+        if (player.world.isClient) return;
+        ParCool.ACTION_PROCESSOR.onTick(player, false);
     }
 }

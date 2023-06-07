@@ -87,8 +87,12 @@ public class ParCool implements ModInitializer {
 //		Capabilities.register();
 		Effects.registerAll();
 		ItemRegistry.registerAll();
-
+		CHANNEL_INSTANCE.initServerListener();
+		if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT)) {
+			CHANNEL_INSTANCE.initClientListener();
+		}
 		PROXY.registerMessages(CHANNEL_INSTANCE);
+
 
 		// nevermind configs work :3dsmile:
 		ModLoadingContext.registerConfig(MOD_ID, ModConfig.Type.SERVER, ParCoolConfig.SERVER_SPEC);

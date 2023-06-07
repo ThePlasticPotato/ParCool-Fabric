@@ -1,0 +1,177 @@
+
+["Possibility of Actions(Some do not have to work)"]
+	can_Crawl = true
+	can_QuickTurn = true
+	can_FastRun = true
+	can_ClimbUp = true
+	can_Dive = true
+	can_Flipping = true
+	can_HangDown = true
+	can_CatLeap = true
+	can_Roll = true
+	can_Dodge = true
+	can_HorizontalWallRun = true
+	can_ClingToCliff = true
+	can_BreakfallReady = true
+	can_Slide = true
+	can_WallJump = true
+	can_JumpFromBar = true
+	can_Tap = true
+	can_WallSlide = true
+	can_Vault = true
+
+["Stamina HUD Configuration"]
+	#horizontal margin
+	#Range: 0 ~ 100
+	margin_h_s_hud = 3
+	#horizontal alignment
+	#Allowed Values: Left, Right
+	align_h_s_hud = "Right"
+	#vertical margin
+	#Range: 0 ~ 100
+	margin_v_s_hud = 3
+	#use Light Stamina HUD
+	use_light_hud = false
+	#vertical alignment
+	#Allowed Values: Top, Bottom
+	align_v_s_hud = "Bottom"
+	#hide stamina HUD when Stamina is infinite
+	hide_s_hud = false
+
+[Animations]
+	#Disable first-person-view animations
+	disable_FPV_animation = false
+	#Disable custom animations
+	disable_animation = false
+	#Disable custom animation of falling
+	disable_falling_animation = false
+
+	[Animations.Animators]
+		enable_JumpFromBarAnimator = true
+		enable_HangAnimator = true
+		enable_BackwardWallJumpAnimator = true
+		enable_FastRunningAnimator = true
+		enable_ClingToCliffAnimator = true
+		enable_RollAnimator = true
+		enable_DiveAnimator = true
+		enable_TapAnimator = true
+		enable_SlidingAnimator = true
+		enable_DodgeAnimator = true
+		enable_SpeedVaultAnimator = true
+		enable_HorizontalWallRunAnimator = true
+		enable_CatLeapAnimator = true
+		enable_ClimbUpAnimator = true
+		enable_CrawlAnimator = true
+		enable_WallSlideAnimator = true
+		enable_FlippingAnimator = true
+		enable_KongVaultAnimator = true
+		enable_WallJumpAnimator = true
+
+	[Animations.Camera]
+		#Disable Roll rotation of camera
+		disable_camera_rotation_rolling = false
+		#Disable Horizontal-WallRun animation of camera
+		disable_camera_animation_h-wall-run = false
+		#Disable Flipping rotation of camera
+		disable_camera_rotation_flipping = false
+		#Disable Vault animation of camera
+		disable_camera_animation_vault = false
+		#Disable Hang animation of camera
+		disable_camera_animation_hang-down = false
+
+[Modifiers]
+	#Dodge Speed Modifier
+	#Range: 0.5 ~ 1.5
+	dodge-speed_modifier = 1.0
+	#How long you can do Slide
+	#Range: 10 ~ 30
+	sliding_continuable_tick = 15
+	#FastRun Speed Modifier
+	#Range: 0.001 ~ 4.0
+	fast-run_modifier = 2.0
+	#How long you can do Horizontal Wall Run
+	#Range: 15 ~ 40
+	wall-run_continuable_tick = 25
+
+["Other Configuration"]
+	#Make Vault Need Vault Key Pressed
+	vaultNeedKeyPressed = false
+	#enable players to do actions needing Fast-Running by sprint
+	substitute_sprint = false
+	#Disable Crawl in air (experimental)
+	disable_crawl_in_air = false
+	#Disable Vault in air (experimental)
+	disable_vault_in_air = false
+	#Vault Animation(Dynamic is to select animation dynamically)
+	#Allowed Values: SpeedVault, KongVault, Dynamic
+	vault_animation_mode = "Dynamic"
+	#Color theme of Setting GUI
+	#Allowed Values: Red, Green, Blue, Yellow, Black
+	gui_color_theme = "Blue"
+	#Disable Double-Tapping For Dodge. Please Use Dodge Key instead
+	disable_double_tapping = false
+	#Enable Roll While player is in creative mode (experimental)
+	enable_roll_creative = true
+	#do Fast-Running whenever you do a sprint of vanilla
+	replace_sprint_with_fast-run = false
+	#Infinite Stamina(this needs a permission from server, even if it is on single player's game. normally permitted)
+	#Please check 'parcool-server.toml' in 'serverconfig' directory
+	infinite_stamina = true
+
+#Stamina Section (may be affected by Server config)
+[Stamina]
+	#ParCool use Feathers mod as stamina system, if it installed(experimental)
+	#(https://www.curseforge.com/minecraft/mc-mods/feathers)
+	use_Feathers = false
+	#ParCool consume hanger value instead of stamina
+	use_hanger_instead = false
+	#Range: 1 ~ 10000
+	value_of_stamina_recovery = 20
+	#Range: 300 ~ 100000
+	max_value_of_stamina = 2000
+
+	[Stamina.Consumption]
+		#Range: 0 ~ 10000
+		stamina_consumption_of_WallJump = 120
+		#Range: 0 ~ 10000
+		stamina_consumption_of_WallSlide = 2
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Vault = 50
+		#Range: 0 ~ 10000
+		stamina_consumption_of_CatLeap = 150
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Dodge = 80
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Slide = 0
+		#Range: 0 ~ 10000
+		stamina_consumption_of_BreakfallReady = 0
+		#Range: 0 ~ 10000
+		stamina_consumption_of_ClingToCliff = 2
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Crawl = 0
+		#Range: 0 ~ 10000
+		stamina_consumption_of_JumpFromBar = 100
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Roll = 100
+		#Range: 0 ~ 10000
+		stamina_consumption_of_HangDown = 3
+		#Range: 0 ~ 10000
+		stamina_consumption_of_HorizontalWallRun = 2
+		#Range: 0 ~ 10000
+		stamina_consumption_of_ClimbUp = 150
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Flipping = 80
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Tap = 100
+		#Range: 0 ~ 10000
+		stamina_consumption_of_FastRun = 2
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Dive = 0
+		#Range: 0 ~ 10000
+		stamina_consumption_of_QuickTurn = 0
+
+	#About ParCool
+	[Stamina.ParCool]
+		#ParCool is Active
+		parcool_activation = true
+

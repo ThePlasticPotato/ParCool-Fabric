@@ -62,7 +62,7 @@ public class SyncStaminaMessage implements C2SPacket, S2CPacket {
         ParCool.LOGGER.info("Stamina Synced, " + stamina.get() + " Max Stamina : " + stamina.getMaxStamina());
         ParCool.CHANNEL_INSTANCE.sendToServer(message);
     }
-    @Environment(SERVER)
+
     @Override
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         ParCool.CHANNEL_INSTANCE.sendToClient(this, player);

@@ -61,7 +61,7 @@ public class SyncActionStateMessage implements S2CPacket, C2SPacket {
 
         ParCool.CHANNEL_INSTANCE.sendToServer(message);
     }
-    @Environment(SERVER)
+
     @Override
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         ParCool.CHANNEL_INSTANCE.sendToClient(this, player);

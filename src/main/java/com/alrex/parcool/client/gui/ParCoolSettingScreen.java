@@ -120,7 +120,7 @@ public class ParCoolSettingScreen extends Screen {
 		int topBarOffsetX = width - topBarItemWidth * modeMenuList.length;
 		fillGradient(matrixStack, 0, 0, this.width, topBarHeight, color.getTopBar1(), color.getTopBar2());
 		drawWithShadow(
-				matrixStack, textRenderer, (OrderedText) MenuTitle,
+				matrixStack, textRenderer, MenuTitle.asOrderedText(),
 				10,
 				topBarHeight / 4 + 1,
 				color.getText()
@@ -171,7 +171,7 @@ public class ParCoolSettingScreen extends Screen {
 		int contentHeight = height - contentOffsetY - textRenderer.fontHeight * 2;
 		viewableItemCount = contentHeight / Checkbox_Item_Height;
 		int headerTextY = headerOffsetY + headerHeight / 2 - textRenderer.fontHeight / 2 + 1;
-		drawWithShadow(matrixStack, textRenderer, (OrderedText) Header_ActionName, offsetX + 5, headerTextY, color.getText());
+		drawWithShadow(matrixStack, textRenderer, Header_ActionName.asOrderedText(), offsetX + 5, headerTextY, color.getText());
 		drawCenteredText(matrixStack, textRenderer, Header_ServerPermission, offsetX + nameColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
 		drawCenteredText(matrixStack, textRenderer, Header_IndividualPermission, offsetX + nameColumnWidth + permissionColumnWidth + permissionColumnWidth / 2, headerTextY, color.getText());
 		for (CheckboxWidget actionButton : actionButtons) {

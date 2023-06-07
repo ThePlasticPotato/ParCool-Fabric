@@ -25,7 +25,7 @@ public class KeyBindings {
 	private static final KeyBinding keyBindWallSlide = new KeyBinding("key.parcool.WallSlide", InputUtil.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.parcool");
 	private static final KeyBinding keyBindHorizontalWallRun = new KeyBinding("key.parcool.HorizontalWallRun", GLFW.GLFW_KEY_R, "key.categories.parcool");
 	private static final KeyBinding keyBindQuickTurn = new KeyBinding("key.parcool.QuickTurn", GLFW.GLFW_KEY_UNKNOWN, "key.categories.parcool");
-	private static final KeyBinding keyBindOpenSettings = new KeyBinding("key.parcool.openSetting", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "key.categories.parcool");
+	private static final KeyBinding keyBindOpenSettings = new KeyBinding("key.parcool.openSetting", GLFW.GLFW_KEY_P, "key.categories.parcool");
 
 	public static KeyBinding getKeySprint() {
 		return MinecraftClient.getInstance().options.sprintKey;

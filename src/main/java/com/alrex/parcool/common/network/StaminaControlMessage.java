@@ -45,7 +45,7 @@ public class StaminaControlMessage implements S2CPacket, C2SPacket {
 
         ParCool.CHANNEL_INSTANCE.sendToClient(message,player);
     }
-    @Environment(SERVER)
+
     @Override
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
 

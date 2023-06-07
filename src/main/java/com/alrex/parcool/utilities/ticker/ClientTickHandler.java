@@ -2,6 +2,7 @@ package com.alrex.parcool.utilities.ticker;
 
 import com.alrex.parcool.ParCool;
 import com.alrex.parcool.client.hud.impl.StaminaHUDController;
+import com.alrex.parcool.client.input.KeyRecorder;
 import com.alrex.parcool.common.event.EventOpenSettingsParCool;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,6 +22,7 @@ public class ClientTickHandler implements ClientTickEvents.EndTick, ClientTickEv
             ParCool.ACTION_PROCESSOR.onTick(player, true);
 
             StaminaHUDController.getInstance().onTick();
+            KeyRecorder.onClientTick();
         }
     }
     @Environment(EnvType.CLIENT)

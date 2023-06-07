@@ -15,7 +15,7 @@ import net.minecraft.text.LiteralText;
 public class EventOpenSettingsParCool {
 
 	public static void onTick() {
-
+		if (true) {return;}
 		if (KeyRecorder.keyOpenSettingsState.isPressed()) {
 			ClientPlayerEntity player = MinecraftClient.getInstance().player;
 			if (player == null) return;
