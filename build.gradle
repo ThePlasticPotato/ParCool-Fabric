@@ -4,11 +4,6 @@ plugins {
   id "org.jetbrains.kotlin.jvm" version "1.8.21"
 }
 
-version = project.mod_version
-group = project.maven_group
-
-<<<<<<< Updated upstream
-//Version Format (McVersion-MajorMOD.MajorAPI.Minor.Patch-VersionStatus)
 version = "${mc_version}-${major_mod}.${major_api}.${minor}.${patch}-${versionStatus.toString()}"
 group = 'com.alrex'
 archivesBaseName = 'ParCool'
