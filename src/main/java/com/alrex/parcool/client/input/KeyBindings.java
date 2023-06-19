@@ -1,5 +1,8 @@
 package com.alrex.parcool.client.input;
 
+import committee.nova.mkb.api.IKeyBinding;
+import committee.nova.mkb.keybinding.KeyConflictContext;
+import committee.nova.mkb.keybinding.KeyModifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.impl.client.keybinding.KeyBindingRegistryImpl;
@@ -118,7 +121,10 @@ public class KeyBindings {
 		KeyBindingRegistryImpl.registerKeyBinding(keyBindWallJump);
 		KeyBindingRegistryImpl.registerKeyBinding(keyBindVault);
 		KeyBindingRegistryImpl.registerKeyBinding(keyBindHorizontalWallRun);
-		KeyBindingRegistryImpl.registerKeyBinding(keyBindOpenSettings);
+		IKeyBinding keyBindOpenSettingsModified = (IKeyBinding) keyBindOpenSettings;
+		keyBindOpenSettingsModified.setKeyConflictContext(KeyConflictContext.UNIVERSAL);
+		keyBindOpenSettingsModified.setKeyModifierAndCode(KeyModifier.ALT, InputUtil.fromTranslationKey("key.keyboard.p"));
+		KeyBindingRegistryImpl.registerKeyBinding((KeyBinding) keyBindOpenSettingsModified);
 		KeyBindingRegistryImpl.registerKeyBinding(keyBindQuickTurn);
 		KeyBindingRegistryImpl.registerKeyBinding(keyBindFlipping);
 		KeyBindingRegistryImpl.registerKeyBinding(keyBindHangDown);

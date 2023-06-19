@@ -35,6 +35,9 @@ repositories {
 		url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
 	}
 	maven { url = "https://cursemaven.com" }
+	maven {
+		url = "https://maven.nova-committee.cn/releases"
+	}
 }
 
 dependencies {
@@ -53,6 +56,8 @@ dependencies {
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-api:4.2.0"
 
 	modImplementation "curse.maven:forgeconfigapiport-547434:3943250"
+
+	modImplementation "committee.nova.mkb.fabric:mkb-1.18.2:1.1.0"
 
 	implementation 'com.electronwill.night-config:core:3.6.5'
 	implementation 'com.electronwill.night-config:toml:3.6.5'

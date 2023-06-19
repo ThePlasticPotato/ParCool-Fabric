@@ -81,9 +81,9 @@ public class SyncStaminaMessage implements C2SPacket, S2CPacket {
             World world = MinecraftClient.getInstance().world;
             if (world == null) return;
             player = world.getPlayerByUuid(playerID);
-            if (player == null || player.isMainPlayer()) return;
+            if (player == null || !player.isMainPlayer()) return;
         } else {
-            player = (PlayerEntity) responseSender;
+            player = listener.getWorld().getPlayerByUuid(playerID);
             ParCool.CHANNEL_INSTANCE.sendToServer(this);
             if (player == null) return;
         }

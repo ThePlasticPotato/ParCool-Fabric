@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static net.fabricmc.api.EnvType.CLIENT;
@@ -26,15 +27,19 @@ public class StaminaControlMessage implements S2CPacket, C2SPacket {
     private int value = 0;
     private boolean add = false;
 
+    private UUID uuid = null;
+
     public void encode(PacketByteBuf packet) {
         packet.writeInt(this.value);
         packet.writeBoolean(this.add);
+        packet.writeUuid(this.uuid);
     }
 
     public static StaminaControlMessage decode(PacketByteBuf packet) {
         StaminaControlMessage message = new StaminaControlMessage();
         message.value = packet.readInt();
         message.add = packet.readBoolean();
+        message.uuid = packet.readUuid();
         return message;
     }
 
@@ -42,7 +47,7 @@ public class StaminaControlMessage implements S2CPacket, C2SPacket {
         StaminaControlMessage message = new StaminaControlMessage();
         message.value = value;
         message.add = add;
-
+        message.uuid = player.getUuid();
         ParCool.CHANNEL_INSTANCE.sendToClient(message,player);
     }
 
@@ -57,7 +62,7 @@ public class StaminaControlMessage implements S2CPacket, C2SPacket {
         if (listener.getConnection().getSide().equals(NetworkSide.CLIENTBOUND)) {
             player = MinecraftClient.getInstance().player;
         } else {
-            player = (PlayerEntity) responseSender;
+            player = listener.getWorld().getPlayerByUuid(uuid);
         }
         if (player == null) return;
         IStamina stamina = IStamina.get(player);

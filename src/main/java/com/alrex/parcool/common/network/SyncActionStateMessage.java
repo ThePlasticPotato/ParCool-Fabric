@@ -101,10 +101,10 @@ public class SyncActionStateMessage implements S2CPacket, C2SPacket {
             World world = MinecraftClient.getInstance().world;
             if (world == null) return;
             player = world.getPlayerByUuid(senderUUID);
-            if (player == null || player.isMainPlayer()) return;
+            if (player == null || !player.isMainPlayer()) return;
             clientSide = true;
         } else {
-            player = (PlayerEntity) responseSender;
+            player = listener.getWorld().getPlayerByUuid(senderUUID);
             ParCool.CHANNEL_INSTANCE.sendToServer(this);
             if (player == null) return;
             clientSide = false;

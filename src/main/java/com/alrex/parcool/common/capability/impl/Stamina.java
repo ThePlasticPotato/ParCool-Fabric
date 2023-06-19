@@ -115,7 +115,7 @@ public class Stamina implements IStamina {
 	public void set(int value) {
 		stamina = Math.min(value, getActualMaxStamina());
 		if (stamina <= 0) {
-			stamina = 0;
+			stamina = 100;
 		}
 	}
 
