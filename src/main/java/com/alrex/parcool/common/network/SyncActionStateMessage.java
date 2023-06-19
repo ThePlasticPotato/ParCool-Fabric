@@ -3,24 +3,28 @@ package com.alrex.parcool.common.network;
 import com.alrex.parcool.ParCool;
 import com.alrex.parcool.common.action.Action;
 import com.alrex.parcool.common.capability.impl.Parkourability;
+import me.pepperbell.simplenetworking.C2SPacket;
+import me.pepperbell.simplenetworking.S2CPacket;
+import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-;
+;import static net.fabricmc.api.EnvType.CLIENT;
 
-public class SyncActionStateMessage {
+public class SyncActionStateMessage implements C2SPacket, S2CPacket {
 	private SyncActionStateMessage() {
 	}
 
@@ -81,19 +85,18 @@ public class SyncActionStateMessage {
 		contextSupplier.get().setPacketHandled(true);
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void handleClient(Supplier<NetworkEvent.Context> contextSupplier) {
-		contextSupplier.get().enqueueWork(() -> {
+	@Environment(CLIENT)
+	public void handle(Minecraft client, ClientPacketListener listener, PacketSender responseSender, SimpleChannel channel) {
 			Player player;
 			boolean clientSide;
-			if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+			if (Minecraft.getInstance) {
 				Level world = Minecraft.getInstance().level;
 				if (world == null) return;
 				player = world.getPlayerByUUID(senderUUID);
 				if (player == null || player.isLocalPlayer()) return;
 				clientSide = true;
 			} else {
-				player = contextSupplier.get().getSender();
+				player = ;
 				ParCool.CHANNEL_INSTANCE.send(PacketDistributor.ALL.noArg(), this);
 				if (player == null) return;
 				clientSide = false;
@@ -131,11 +134,9 @@ public class SyncActionStateMessage {
 						break;
 				}
 			}
-		});
-		contextSupplier.get().setPacketHandled(true);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(CLIENT)
 	public static void sync(Player player, Encoder builder) {
 		ByteBuffer buffer1 = builder.build();
 		if (buffer1.limit() == 0) return;
@@ -145,6 +146,11 @@ public class SyncActionStateMessage {
 		buffer1.get(message.buffer);
 
 		ParCool.CHANNEL_INSTANCE.sendToServer(message);
+	}
+
+	@Override
+	public void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, PacketSender responseSender, SimpleChannel channel) {
+
 	}
 
 	public static class Encoder {

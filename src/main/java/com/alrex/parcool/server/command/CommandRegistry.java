@@ -9,10 +9,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.synchronization.ArgumentTypes;
 import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CommandRegistry {
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean b) {
 		dispatcher.register(
 				Commands.literal(ParCool.MOD_ID)
 						.then(StaminaControlCommand.getBuilder())
@@ -20,7 +19,7 @@ public class CommandRegistry {
 		);
 	}
 
-	public static void registerArgumentTypes(FMLCommonSetupEvent event) {
+	public static void registerArgumentTypes() {
 		ArgumentTypes.register("parcool:action_name", ActionArgumentType.class, new EmptyArgumentSerializer<>(ActionArgumentType::action));
 	}
 }

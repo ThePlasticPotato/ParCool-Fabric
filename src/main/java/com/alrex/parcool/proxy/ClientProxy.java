@@ -1,48 +1,39 @@
 package com.alrex.parcool.proxy;
 
 import com.alrex.parcool.common.network.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.simple.SimpleChannel;
+import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.api.Environment;
 
-@OnlyIn(Dist.CLIENT)
+import static net.fabricmc.api.EnvType.CLIENT;
+
+@Environment(CLIENT)
 public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerMessages(SimpleChannel instance) {
-		instance.registerMessage(
-				3,
+		instance.registerC2SPacket(
 				StartBreakfallMessage.class,
-				StartBreakfallMessage::encode,
-				StartBreakfallMessage::decode,
-				StartBreakfallMessage::handleClient
+				3,
+				StartBreakfallMessage::decode
 		);
-		instance.registerMessage(
-				10,
+		instance.registerC2SPacket(
 				SyncStaminaMessage.class,
-				SyncStaminaMessage::encode,
-				SyncStaminaMessage::decode,
-				SyncStaminaMessage::handleClient
+				10,
+				SyncStaminaMessage::decode
 		);
-		instance.registerMessage(
-				12,
+		instance.registerC2SPacket(
 				LimitationByServerMessage.class,
-				LimitationByServerMessage::encode,
-				LimitationByServerMessage::decode,
-				LimitationByServerMessage::handle
+				12,
+				LimitationByServerMessage::decode
 		);
-		instance.registerMessage(
-				15,
+		instance.registerC2SPacket(
 				SyncActionStateMessage.class,
-				SyncActionStateMessage::encode,
-				SyncActionStateMessage::decode,
-				SyncActionStateMessage::handleClient
+				15,
+				SyncActionStateMessage::decode
 		);
-		instance.registerMessage(
-				16,
+		instance.registerC2SPacket(
 				StaminaControlMessage.class,
-				StaminaControlMessage::encode,
-				StaminaControlMessage::decode,
-				StaminaControlMessage::handleClient
+				16,
+				StaminaControlMessage::decode
 		);
 	}
 }

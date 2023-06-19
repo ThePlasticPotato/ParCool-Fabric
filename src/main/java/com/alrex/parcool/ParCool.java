@@ -8,10 +8,6 @@ import com.alrex.parcool.common.capability.capabilities.Capabilities;
 import com.alrex.parcool.common.item.ItemRegistry;
 import com.alrex.parcool.common.potion.Effects;
 import com.alrex.parcool.common.potion.Potions;
-import com.alrex.parcool.proxy.AllProxy;
-import com.alrex.parcool.proxy.ClientProxy;
-import com.alrex.parcool.proxy.CommonProxy;
-import com.alrex.parcool.proxy.ServerProxy;
 import com.alrex.parcool.server.command.CommandRegistry;
 //identifier
 
@@ -32,8 +28,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +48,7 @@ public class ParCool implements ModInitializer {
 
 
 	//todo replace with new network system
-	public static final SimpleChannel CHANNEL_INSTANCE = new SimpleChannel(new Identifier(ParCool.MOD_ID, "message"));
+	public static final SimpleChannel CHANNEL_INSTANCE = new SimpleChannel(new ResourceLocation(ParCool.MOD_ID, "message"));
 
 //	public static final ClientProxy CLIENT_PROXY = new ClientProxy();
 //	public static final ServerProxy SERVER_PROXY = new ServerProxy();
@@ -86,6 +82,7 @@ public class ParCool implements ModInitializer {
 		//todo finish capabilities :clueless:
 //		Capabilities.register();
 		Effects.registerAll();
+		CommandRegistry.registerArgumentTypes();
 		ItemRegistry.registerAll();
 		CHANNEL_INSTANCE.initServerListener();
 		if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT)) {

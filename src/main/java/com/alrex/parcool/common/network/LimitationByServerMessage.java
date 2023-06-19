@@ -6,20 +6,24 @@ import com.alrex.parcool.common.action.ActionList;
 import com.alrex.parcool.common.capability.impl.Parkourability;
 import com.alrex.parcool.common.info.ActionLimitation;
 import com.alrex.parcool.common.info.LimitationByServer;
+import me.pepperbell.simplenetworking.C2SPacket;
+import me.pepperbell.simplenetworking.S2CPacket;
+import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
-;
+;import static net.fabricmc.api.EnvType.CLIENT;
 
-public class LimitationByServerMessage {
+public class LimitationByServerMessage implements C2SPacket, S2CPacket {
 	private boolean forIndividuals = false;
 	private boolean enforced = false;
 	private int maxStaminaLimitation = Integer.MAX_VALUE;
@@ -92,22 +96,6 @@ public class LimitationByServerMessage {
 		return message;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-		contextSupplier.get().enqueueWork(() -> {
-			Player player = Minecraft.getInstance().player;
-			if (player == null) return;
-			Parkourability parkourability = Parkourability.get(player);
-			if (parkourability == null) return;
-			if (forIndividuals) {
-				parkourability.getActionInfo().receiveIndividualLimitation(this);
-			} else {
-				parkourability.getActionInfo().receiveLimitation(this);
-			}
-		});
-		contextSupplier.get().setPacketHandled(true);
-	}
-
 	private static LimitationByServerMessage newInstanceForServerWide() {
 		LimitationByServerMessage message = new LimitationByServerMessage();
 		ParCoolConfig.Server config = ParCoolConfig.CONFIG_SERVER;
@@ -138,7 +126,7 @@ public class LimitationByServerMessage {
 	public static void send(ServerPlayer player) {
 		LimitationByServerMessage msg = newInstanceForServerWide();
 		msg.forIndividuals = false;
-		ParCool.CHANNEL_INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+		ParCool.CHANNEL_INSTANCE.sendToClient(msg, player);
 	}
 
 	public static void sendIndividualLimitation(ServerPlayer player) {
@@ -146,6 +134,24 @@ public class LimitationByServerMessage {
 		if (parkourability == null) return;
 		LimitationByServerMessage msg = newInstance(parkourability.getActionInfo().getIndividualLimitation());
 		msg.forIndividuals = true;
-		ParCool.CHANNEL_INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+		ParCool.CHANNEL_INSTANCE.sendToClient(msg, player);
+	}
+
+	@Override
+	public void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, PacketSender responseSender, SimpleChannel channel) {
+
+	}
+	@Environment(CLIENT)
+	@Override
+	public void handle(Minecraft client, ClientPacketListener listener, PacketSender responseSender, SimpleChannel channel) {
+			Player player = Minecraft.getInstance().player;
+			if (player == null) return;
+			Parkourability parkourability = Parkourability.get(player);
+			if (parkourability == null) return;
+			if (forIndividuals) {
+				parkourability.getActionInfo().receiveIndividualLimitation(this);
+			} else {
+				parkourability.getActionInfo().receiveLimitation(this);
+			}
 	}
 }
