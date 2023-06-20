@@ -8,6 +8,6 @@ public class CameraSetupHandler implements CameraSetupCallback {
     @Override
     public boolean onCameraSetup(CameraInfo info) {
         ParCool.ACTION_PROCESSOR.onViewRender();
-        return false;
+        return true;
     }
 }

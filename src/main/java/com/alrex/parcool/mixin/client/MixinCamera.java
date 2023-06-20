@@ -39,12 +39,22 @@ public class MixinCamera implements IParCoolCamera {
         this.roll = roll;
     }
 
+    @Override
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    @Override
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
     /**
      * @author Potaot
      * @reason hell
      */
     @Overwrite
-    protected void setRotation(float yaw, float pitch) {
+    public void setRotation(float yaw, float pitch) {
         this.pitch = pitch;
         this.yaw = yaw;
         this.rotation.set(0.0F, 0.0F, 0.0F, 1.0F);

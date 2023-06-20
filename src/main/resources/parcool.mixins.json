@@ -9,6 +9,7 @@
     "client.IngameGuiAccessor",
     "client.InGameHudMixin",
     "client.LocalPlayerMixin",
+    "client.MixinCamera",
     "client.MixinGameRenderer",
     "client.PlayerModelMixin",
     "client.PlayerRendererMixin"
@@ -17,10 +18,10 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "common.BoundKeyAccessor",
+    "common.KeybindingMixin",
     "common.LivingEntityMixin",
     "common.PlayerMixin",
-    "common.KeybindingMixin",
-    "common.BoundKeyAccessor",
     "common.TimesPressedAccessor"
   ]
 }
