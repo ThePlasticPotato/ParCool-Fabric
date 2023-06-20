@@ -55,7 +55,7 @@ public class StaminaControlMessage implements S2CPacket, C2SPacket {
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
 
     }
-    @Environment(CLIENT)
+
     @Override
     public void handle(MinecraftClient client, ClientPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         PlayerEntity player;

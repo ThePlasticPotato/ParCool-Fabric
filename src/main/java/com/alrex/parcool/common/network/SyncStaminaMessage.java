@@ -73,7 +73,7 @@ public class SyncStaminaMessage implements C2SPacket, S2CPacket {
         stamina.setExhaustion(exhausted);
         stamina.setMaxStamina(clientDemandedMaxValue);
     }
-    @Environment(CLIENT)
+
     @Override
     public void handle(MinecraftClient client, ClientPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         PlayerEntity player;

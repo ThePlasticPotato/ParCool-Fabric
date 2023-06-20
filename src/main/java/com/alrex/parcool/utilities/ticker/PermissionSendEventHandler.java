@@ -10,11 +10,14 @@ import net.minecraft.world.World;
 public class PermissionSendEventHandler implements EntityEvents.JoinWorld {
     @Override
     public boolean onJoinWorld(Entity entity, World world, boolean loadedFromDisk) {
+        if (world.isClient) {
+            return true;
+        }
         if (entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             EventSendPermissions.JoinEvent(player);
             return true;
         }
-        return true;
+        return false;
     }
 }

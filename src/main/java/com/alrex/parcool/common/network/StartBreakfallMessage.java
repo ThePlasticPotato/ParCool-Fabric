@@ -52,7 +52,7 @@ public class StartBreakfallMessage implements S2CPacket, C2SPacket {
     public void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
 
     }
-    @Environment(EnvType.CLIENT)
+
     @Override
     public void handle(MinecraftClient client, ClientPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         PlayerEntity player = MinecraftClient.getInstance().player;

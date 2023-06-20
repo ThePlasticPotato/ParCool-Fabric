@@ -138,7 +138,6 @@ public class LimitationByServerMessage implements S2CPacket, C2SPacket {
         ParCool.CHANNEL_INSTANCE.sendToClient(msg, player);
     }
 
-    @Environment(CLIENT)
     @Override
     public void handle(MinecraftClient client, ClientPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         PlayerEntity player = MinecraftClient.getInstance().player;

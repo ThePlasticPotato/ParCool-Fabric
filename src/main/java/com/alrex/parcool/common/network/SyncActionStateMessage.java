@@ -92,7 +92,7 @@ public class SyncActionStateMessage implements S2CPacket, C2SPacket {
             }
         }
     }
-    @Environment(CLIENT)
+
     @Override
     public void handle(MinecraftClient client, ClientPlayNetworkHandler listener, PacketSender responseSender, SimpleChannel channel) {
         PlayerEntity player;

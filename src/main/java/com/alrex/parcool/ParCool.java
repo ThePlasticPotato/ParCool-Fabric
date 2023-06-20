@@ -116,7 +116,7 @@ public class ParCool implements ModInitializer {
 		PlayerCopyCallback.EVENT.register(new PlayerCloneEventHandler());
 		LivingEntityEvents.JUMP.register(new JumpEventHandler());
 		LivingEntityEvents.FALL.register(new PlayerFallEventHandler());
-		EntityEvents.ON_JOIN_WORLD.register(new PermissionSendEventHandler());
+//		EntityEvents.ON_JOIN_WORLD.register(new PermissionSendEventHandler());
 	}
 
 	public ParCool() {
