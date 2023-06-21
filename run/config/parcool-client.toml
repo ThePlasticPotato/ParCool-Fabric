@@ -11,6 +11,7 @@
 	can_Roll = true
 	can_Dodge = true
 	can_HorizontalWallRun = true
+	can_Spindash = true
 	can_ClingToCliff = true
 	can_BreakfallReady = true
 	can_Slide = true
@@ -57,6 +58,7 @@
 		enable_TapAnimator = true
 		enable_SlidingAnimator = true
 		enable_DodgeAnimator = true
+		enable_SpindashAnimator = true
 		enable_SpeedVaultAnimator = true
 		enable_HorizontalWallRunAnimator = true
 		enable_CatLeapAnimator = true
@@ -143,6 +145,8 @@
 		stamina_consumption_of_Dodge = 80
 		#Range: 0 ~ 10000
 		stamina_consumption_of_Slide = 0
+		#Range: 0 ~ 10000
+		stamina_consumption_of_Spindash = 80
 		#Range: 0 ~ 10000
 		stamina_consumption_of_BreakfallReady = 0
 		#Range: 0 ~ 10000

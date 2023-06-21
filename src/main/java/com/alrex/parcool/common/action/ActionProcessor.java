@@ -59,7 +59,7 @@ public class ActionProcessor {
 		for (Action action : actions) {
 
 			if (action.isDoing()) {
-				ParCool.LOGGER.info("Ticking doing action: " + action.getClass().getName());
+//				ParCool.LOGGER.info("Ticking doing action: " + action.getClass().getName());
 			}
 			StaminaConsumeTiming timing = action.getStaminaConsumeTiming();
 			if (needSync) {

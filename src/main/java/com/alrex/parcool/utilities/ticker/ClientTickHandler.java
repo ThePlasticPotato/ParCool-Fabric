@@ -21,7 +21,7 @@ public class ClientTickHandler implements ClientTickEvents.EndTick, ClientTickEv
             if (player == null) return;
             ParCool.ACTION_PROCESSOR.onTick(player, true);
 
-            StaminaHUDController.getInstance().onTick();
+//            StaminaHUDController.getInstance().onTick();
             KeyRecorder.onClientTick();
         }
     }

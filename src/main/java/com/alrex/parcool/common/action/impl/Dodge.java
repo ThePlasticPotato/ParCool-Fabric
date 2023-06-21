@@ -155,6 +155,16 @@ public class Dodge extends Action {
 		if (animation != null) animation.setAnimator(new DodgeAnimator());
 	}
 
+	@Override
+	public void onStartInServer(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
+		player.setInvulnerable(true);
+	}
+
+	@Override
+	public void onStopInServer(PlayerEntity player) {
+		player.setInvulnerable(false);
+	}
+
 	public DodgeDirection getDodgeDirection() {
 		return dodgeDirection;
 	}

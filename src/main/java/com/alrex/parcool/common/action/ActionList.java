@@ -30,7 +30,8 @@ public class ActionList {
 			new ActionRegistry<>(Tap.class, Tap::new, 100),
 			new ActionRegistry<>(Vault.class, Vault::new, 50),
 			new ActionRegistry<>(WallJump.class, WallJump::new, 120),
-			new ActionRegistry<>(WallSlide.class, WallSlide::new, 2)
+			new ActionRegistry<>(WallSlide.class, WallSlide::new, 2),
+			new ActionRegistry<>(Spindash.class, Spindash::new, 80)
 	);
 	private static final HashMap<Class<? extends Action>, Short> INDEX_MAP;
 	private static final TreeMap<String, Short> NAME_2_INDEX_MAP;

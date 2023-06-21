@@ -22,6 +22,8 @@ public class StaminaHUDController {
 	LightStaminaHUD lightStaminaHUD;
 	StaminaHUD staminaHUD;
 
+	StaminaHudManager staminaHUDManager;
+
 	Position getStaminaHUDPosition() {
 		return new Position(
 				ParCoolConfig.CONFIG_CLIENT.alignHorizontalStaminaHUD.get(),
@@ -34,6 +36,7 @@ public class StaminaHUDController {
 	private StaminaHUDController() {
 		lightStaminaHUD = new LightStaminaHUD();
 		staminaHUD = new StaminaHUD(this::getStaminaHUDPosition);
+		staminaHUDManager = new StaminaHudManager();
 	}
 
 	public void onTick() {
@@ -41,6 +44,7 @@ public class StaminaHUDController {
 		if (player == null || player.isCreative()) return;
 		lightStaminaHUD.onTick(player);
 		staminaHUD.onTick(player);
+//		staminaHUDManager.onTick(player);
 	}
 
 	public void render(MatrixStack poseStack, float partialTick) {
@@ -53,10 +57,10 @@ public class StaminaHUDController {
         int height = ((IngameGuiAccessor) MinecraftClient.getInstance().inGameHud).getScaledHeight();
         int width = ((IngameGuiAccessor) MinecraftClient.getInstance().inGameHud).getScaledWidth();
 
-		if (config.useLightHUD.get()) {
-			lightStaminaHUD.render(poseStack, partialTick, width, height);
-		} else {
-			staminaHUD.render(poseStack, partialTick, width, height);
-		}
+//		if (config.useLightHUD.get()) {
+//			lightStaminaHUD.render(poseStack, partialTick, width, height);
+//		} else {
+//			staminaHUD.render(poseStack, partialTick, width, height);
+//		}
 	}
 }

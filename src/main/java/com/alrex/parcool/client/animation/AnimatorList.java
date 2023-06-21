@@ -26,7 +26,8 @@ public class AnimatorList {
 			SpeedVaultAnimator.class,
 			TapAnimator.class,
 			WallJumpAnimator.class,
-			WallSlideAnimator.class
+			WallSlideAnimator.class,
+			SpindashAnimator.class
 	);
 	private static final HashMap<Class<? extends Animator>, Short> INDEX_MAP;
 
