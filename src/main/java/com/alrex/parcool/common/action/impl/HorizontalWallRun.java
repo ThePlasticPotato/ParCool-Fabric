@@ -126,7 +126,7 @@ public class HorizontalWallRun extends Action {
 		runningWallDirection = new Vec3d(startData.getDouble(), 0, startData.getDouble());
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new HorizontalWallRunAnimator(wallIsRightward));
+			animation.addAnimator(new HorizontalWallRunAnimator(wallIsRightward));
 		}
 	}
 
@@ -136,7 +136,7 @@ public class HorizontalWallRun extends Action {
 		runningWallDirection = new Vec3d(startData.getDouble(), 0, startData.getDouble());
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new HorizontalWallRunAnimator(wallIsRightward));
+			animation.addAnimator(new HorizontalWallRunAnimator(wallIsRightward));
 		}
 	}
 

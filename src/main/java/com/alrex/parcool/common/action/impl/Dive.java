@@ -71,7 +71,7 @@ public class Dive extends Action {
 		playerYSpeedOld = playerYSpeed = ySpeed;
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new DiveAnimator(ySpeed));
+			animation.addAnimator(new DiveAnimator(ySpeed));
 		}
 	}
 
@@ -99,7 +99,7 @@ public class Dive extends Action {
 		playerYSpeedOld = playerYSpeed = ySpeed;
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new DiveAnimator(ySpeed));
+			animation.addAnimator(new DiveAnimator(ySpeed));
 		}
 	}
 }

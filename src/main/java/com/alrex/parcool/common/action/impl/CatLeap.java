@@ -74,13 +74,13 @@ public class CatLeap extends Action {
 		coolTimeTick = MAX_COOL_TIME_TICK;
 		player.setVelocity(vec.x, catLeapYSpeed, vec.z);
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new CatLeapAnimator());
+		if (animation != null) animation.addAnimator(new CatLeapAnimator());
 	}
 
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new CatLeapAnimator());
+		if (animation != null) animation.addAnimator(new CatLeapAnimator());
 	}
 
 	@Override

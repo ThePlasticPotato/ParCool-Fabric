@@ -73,7 +73,7 @@ public class Flipping extends Action {
 		stamina.consume(parkourability.getActionInfo().getStaminaConsumptionOf(Flipping.class));
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new FlippingAnimator(
+			animation.addAnimator(new FlippingAnimator(
 					FlippingDirection.getFromCode(startData.getInt())
 			));
 		}
@@ -83,7 +83,7 @@ public class Flipping extends Action {
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new FlippingAnimator(
+			animation.addAnimator(new FlippingAnimator(
 					FlippingDirection.getFromCode(startData.getInt())
 			));
 		}

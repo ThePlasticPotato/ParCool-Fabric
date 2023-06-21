@@ -67,7 +67,7 @@ public class Roll extends Action {
 		startRequired = false;
 		Direction direction = BufferUtil.getBoolean(startData) ? Direction.Back : Direction.Front;
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new RollAnimator(direction));
+		if (animation != null) animation.addAnimator(new RollAnimator(direction));
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class Roll extends Action {
 		}
 		player.setVelocity(vec.x, 0, vec.z);
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new RollAnimator(direction));
+		if (animation != null) animation.addAnimator(new RollAnimator(direction));
 	}
 
 	public void startRoll(PlayerEntity player) {

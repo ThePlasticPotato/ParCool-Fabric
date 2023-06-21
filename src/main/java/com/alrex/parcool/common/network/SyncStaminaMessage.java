@@ -59,7 +59,7 @@ public class SyncStaminaMessage implements C2SPacket, S2CPacket {
         message.playerID = player.getUuid();
         message.clientDemandedMaxValue = ParCoolConfig.CONFIG_CLIENT.staminaMax.get();
 
-        ParCool.LOGGER.info("Stamina Synced, " + stamina.get() + " Max Stamina : " + stamina.getMaxStamina());
+//        ParCool.LOGGER.info("Stamina Synced, " + stamina.get() + " Max Stamina : " + stamina.getMaxStamina());
         ParCool.CHANNEL_INSTANCE.sendToServer(message);
     }
 

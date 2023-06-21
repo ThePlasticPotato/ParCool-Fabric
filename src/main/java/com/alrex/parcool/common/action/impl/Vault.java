@@ -129,10 +129,10 @@ public class Vault extends Action {
 		if (animation != null && animationType != null) {
 			switch (animationType) {
 				case SpeedVault:
-					animation.setAnimator(new SpeedVaultAnimator(speedVaultType));
+					animation.addAnimator(new SpeedVaultAnimator(speedVaultType));
 					break;
 				case KongVault:
-					animation.setAnimator(new KongVaultAnimator());
+					animation.addAnimator(new KongVaultAnimator());
 					break;
 			}
 		}
@@ -148,10 +148,10 @@ public class Vault extends Action {
 		if (animation != null && animationType != null) {
 			switch (animationType) {
 				case SpeedVault:
-					animation.setAnimator(new SpeedVaultAnimator(speedVaultType));
+					animation.addAnimator(new SpeedVaultAnimator(speedVaultType));
 					break;
 				case KongVault:
-					animation.setAnimator(new KongVaultAnimator());
+					animation.addAnimator(new KongVaultAnimator());
 					break;
 			}
 		}

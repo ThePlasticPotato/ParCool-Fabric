@@ -43,7 +43,7 @@ public class Crawl extends Action {
 	public void onWorkingTickInClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new CrawlAnimator());
+			animation.addAnimator(new CrawlAnimator());
 		}
 	}
 

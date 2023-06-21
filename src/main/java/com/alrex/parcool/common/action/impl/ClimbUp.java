@@ -39,13 +39,13 @@ public class ClimbUp extends Action {
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		EntityUtil.addVelocity(player, new Vec3d(0, 0.6, 0));
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new ClimbUpAnimator());
+		if (animation != null) animation.addAnimator(new ClimbUpAnimator());
 	}
 
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new ClimbUpAnimator());
+		if (animation != null) animation.addAnimator(new ClimbUpAnimator());
 	}
 
 	@Override

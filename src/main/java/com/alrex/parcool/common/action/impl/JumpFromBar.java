@@ -34,13 +34,13 @@ public class JumpFromBar extends Action {
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		EntityUtil.addVelocity(player, player.getRotationVector().multiply(1, 0, 1).normalize().multiply(player.getWidth() * 0.75));
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new JumpFromBarAnimator());
+		if (animation != null) animation.addAnimator(new JumpFromBarAnimator());
 	}
 
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new JumpFromBarAnimator());
+		if (animation != null) animation.addAnimator(new JumpFromBarAnimator());
 	}
 
 	@Override

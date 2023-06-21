@@ -16,6 +16,9 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static net.fabricmc.api.EnvType.CLIENT;
 
 @Environment(CLIENT)
@@ -26,65 +29,98 @@ public class Animation implements Component, AutoSyncedComponent {
 		return optional.orElseThrow(IllegalStateException::new);
 	}
 
-	private Animator animator = null;
+	//private Animator animator = null;
+
+	private ArrayList<Animator> animators = new ArrayList<>();
+
 	private final PassiveCustomAnimation passiveAnimation = new PassiveCustomAnimation();
 
-	public void setAnimator(Animator animator) {
+//	public void setAnimator(Animator animator) {
+//		if (ParCoolConfig.CONFIG_CLIENT.disableAnimation.get()) return;
+//		ParCoolConfig.Client config = ParCoolConfig.CONFIG_CLIENT;
+//		if (!config.canAnimate(animator.getClass()).get()) return;
+//		this.animators = animator;
+//	}
+	public void addAnimator(Animator animator) {
 		if (ParCoolConfig.CONFIG_CLIENT.disableAnimation.get()) return;
 		ParCoolConfig.Client config = ParCoolConfig.CONFIG_CLIENT;
 		if (!config.canAnimate(animator.getClass()).get()) return;
-		this.animator = animator;
+		animators.add(animator);
+	}
+
+	public ArrayList<Animator> getActiveAnimators() {
+		return animators;
+	}
+
+	public void removeAnimator(Animator animator) {
+		if (ParCoolConfig.CONFIG_CLIENT.disableAnimation.get()) return;
+		ParCoolConfig.Client config = ParCoolConfig.CONFIG_CLIENT;
+		if (!config.canAnimate(animator.getClass()).get()) return;
+		animators.remove(animator);
 	}
 
 	public boolean animatePre(PlayerEntity player, PlayerModelTransformer modelTransformer) {
-		if (animator == null) return false;
+		if (animators == null || animators.isEmpty()) return false;
 		Parkourability parkourability = Parkourability.get(player);
-		return animator.animatePre(player, parkourability, modelTransformer);
+		ArrayList<Animator> animsSafe = new ArrayList<>(animators);
+		return animsSafe.get(0).animatePre(player, parkourability, modelTransformer);
 	}
 
 	public void animatePost(PlayerEntity player, PlayerModelTransformer modelTransformer) {
 		Parkourability parkourability = Parkourability.get(player);
 		if (parkourability == null) return;
-		if (animator == null) {
+		if (animators == null || animators.isEmpty()) {
 			passiveAnimation.animate(player, parkourability, modelTransformer);
 			return;
 		}
-		animator.animatePost(player, parkourability, modelTransformer);
+		ArrayList<Animator> animsSafe = new ArrayList<>(animators);
+		for (Animator anim : animsSafe) {
+			anim.animatePost(player, parkourability, modelTransformer);
+		}
 	}
 
 	public void applyRotate(AbstractClientPlayerEntity player, PlayerModelRotator rotator) {
 		Parkourability parkourability = Parkourability.get(player);
 		if (parkourability == null) return;
-		if (animator == null) {
+		if (animators == null || animators.isEmpty()) {
 			passiveAnimation.rotate(player, parkourability, rotator);
 			return;
 		}
-		animator.rotate(player, parkourability, rotator);
+		ArrayList<Animator> animsSafe = new ArrayList<>(animators);
+		for (Animator anim : animsSafe) {
+			anim.rotate(player, parkourability, rotator);
+		}
 	}
 
 	public void cameraSetup(PlayerEntity player, Parkourability parkourability) {
-		if (animator == null) return;
+		if (animators == null || animators.isEmpty()) return;
 		if (player.isMainPlayer()
 				&& MinecraftClient.getInstance().options.getPerspective().isFirstPerson()
 				&& ParCoolConfig.CONFIG_CLIENT.disableFPVAnimation.get()
 		) return;
-		animator.onCameraSetUp(player, parkourability);
+		ArrayList<Animator> animsSafe = new ArrayList<>(animators);
+		for (Animator anim : animsSafe) {
+			anim.onCameraSetUp(player, parkourability);
+		}
 	}
 	@Environment(CLIENT)
 	public void tick(PlayerEntity player, Parkourability parkourability) {
 		passiveAnimation.tick(player, parkourability);
-		if (animator != null) {
-			animator.tick();
-			if (animator.shouldRemoved(player, parkourability)) animator = null;
+		if (animators != null && !animators.isEmpty()) {
+			ArrayList<Animator> animsSafe = new ArrayList<>(animators);
+			for (Animator anim : animsSafe) {
+				anim.tick();
+				if (anim.shouldRemoved(player, parkourability)) removeAnimator(anim);
+			}
 		}
 	}
 
 	public boolean hasAnimator() {
-		return animator != null;
+		return (animators != null && !animators.isEmpty());
 	}
 
-	public void removeAnimator() {
-		animator = null;
+	public void voidAnimator() {
+		animators = new ArrayList<>();
 	}
 
 	@Override

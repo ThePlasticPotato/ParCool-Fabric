@@ -144,7 +144,7 @@ public class Dodge extends Action {
 		dodgeVec = dodgeVec.multiply(0.6 * ParCoolConfig.CONFIG_CLIENT.dodgeSpeedModifier.get());
 		EntityUtil.addVelocity(player, new Vec3d(dodgeVec.x, jump, dodgeVec.z));
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new DodgeAnimator());
+		if (animation != null) animation.addAnimator(new DodgeAnimator());
 	}
 
 	@Environment(CLIENT)
@@ -152,7 +152,7 @@ public class Dodge extends Action {
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		dodgeDirection = DodgeDirection.getFromCode(startData.getInt());
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new DodgeAnimator());
+		if (animation != null) animation.addAnimator(new DodgeAnimator());
 	}
 
 	public DodgeDirection getDodgeDirection() {

@@ -74,7 +74,7 @@ public class ClingToCliff extends Action {
 		facingDirection = FacingDirection.ToWall;
 		armSwingAmount = 0;
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new ClingToCliffAnimator());
+		if (animation != null) animation.addAnimator(new ClingToCliffAnimator());
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class ClingToCliff extends Action {
 		facingDirection = FacingDirection.ToWall;
 		armSwingAmount = 0;
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new ClingToCliffAnimator());
+		if (animation != null) animation.addAnimator(new ClingToCliffAnimator());
 	}
 
 	@Environment(CLIENT)

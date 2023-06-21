@@ -29,14 +29,14 @@ public class Tap extends Action {
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		startRequired = false;
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new TapAnimator());
+		if (animation != null) animation.addAnimator(new TapAnimator());
 	}
 
 	@Override
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		startRequired = false;
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new TapAnimator());
+		if (animation != null) animation.addAnimator(new TapAnimator());
 	}
 
 	@Override

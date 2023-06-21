@@ -48,7 +48,7 @@ public class Slide extends Action {
 		slidingVec = player.getRotationVector().multiply(1, 0, 1).normalize();
 		Animation animation = Animation.get(player);
 		if (animation != null) {
-			animation.setAnimator(new SlidingAnimator());
+			animation.addAnimator(new SlidingAnimator());
 		}
 	}
 
@@ -56,7 +56,7 @@ public class Slide extends Action {
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new SlidingAnimator());
+			animation.addAnimator(new SlidingAnimator());
 		}
 	}
 
@@ -72,7 +72,7 @@ public class Slide extends Action {
 	public void onStopInLocalClient(PlayerEntity player) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new CrawlAnimator());
+			animation.addAnimator(new CrawlAnimator());
 		}
 	}
 
@@ -80,7 +80,7 @@ public class Slide extends Action {
 	public void onStopInOtherClient(PlayerEntity player) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new CrawlAnimator());
+			animation.addAnimator(new CrawlAnimator());
 		}
 	}
 

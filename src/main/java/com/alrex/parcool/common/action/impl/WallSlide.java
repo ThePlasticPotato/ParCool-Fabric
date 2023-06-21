@@ -54,7 +54,7 @@ public class WallSlide extends Action {
 	public void onWorkingTickInClient(PlayerEntity player, Parkourability parkourability, IStamina stamina) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new WallSlideAnimator());
+			animation.addAnimator(new WallSlideAnimator());
 		}
 	}
 

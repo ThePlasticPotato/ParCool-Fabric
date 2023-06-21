@@ -82,7 +82,7 @@ public class HangDown extends Action {
 				|| (hangingBarAxis == BarAxis.Z && Math.abs(bodyVec.z) < Math.abs(bodyVec.x));
 		player.setVelocity(0, 0, 0);
 		Animation animation = Animation.get(player);
-		if (animation != null) animation.setAnimator(new HangAnimator());
+		if (animation != null) animation.addAnimator(new HangAnimator());
 	}
 
 	@Environment(CLIENT)

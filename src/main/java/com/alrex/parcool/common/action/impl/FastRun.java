@@ -69,7 +69,7 @@ public class FastRun extends Action {
 	public void onStartInLocalClient(PlayerEntity player, Parkourability parkourability, IStamina stamina, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new FastRunningAnimator());
+			animation.addAnimator(new FastRunningAnimator());
 		}
 	}
 
@@ -77,7 +77,7 @@ public class FastRun extends Action {
 	public void onStartInOtherClient(PlayerEntity player, Parkourability parkourability, ByteBuffer startData) {
 		Animation animation = Animation.get(player);
 		if (animation != null && !animation.hasAnimator()) {
-			animation.setAnimator(new FastRunningAnimator());
+			animation.addAnimator(new FastRunningAnimator());
 		}
 	}
 
